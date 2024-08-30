@@ -1,63 +1,85 @@
-#include <stdio.h>
-#include "defines.h"
-#include "ncurses.h"
-#include <string.h>
 
-#define HEIGHT 20
+#include "tetris.h"
+#include "backend.h"
+#include "frontend.h"
 
-#define WIDTH 20
+int main() {
+    int c;
+    WinBlocks winGame;
+    SetUp(&winGame);
+    GameInfo_t gameInfo;
+    Constructor(&gameInfo);
+    createNextFigure(&gameInfo);
+
+    MoveFigure(&gameInfo);
+    // printf("%d ", gameInfo.next_figure.center_x[0]);
+    FigureOnBoard(&gameInfo);
+    
+    // for (int i = 0; i < BOARD_HEIGHT; i++) {
+    //     for (int j = 0; j < BOARD_WIDTH; j++) {
+    //         printw("%d ", gameInfo.field[i][j]); // Печатаем значение элемента матрицы
+    //     }
+    //     printw("\n"); // Переход на новую строку после печати строки матрицы
+    // }
+   
 
 
-#define ACS_ULCORNER	NCURSES_ACS('l') /* upper left corner */
-#define ACS_LLCORNER	NCURSES_ACS('m') /* lower left corner */
-#define ACS_URCORNER	NCURSES_ACS('k') /* upper right corner */
-#define ACS_LRCORNER	NCURSES_ACS('j') /* lower right corner */
-
-void print_rectangle(int top_y, int bottom_y, int left_x, int right_x)
-{
-    MVADDCH(top_y, left_x, ACS_ULCORNER);
-
-    int i = left_x + 1;
-
-    for (;i < right_x; i++)
-        MVADDCH(top_y, i, ACS_HLINE);
-    MVADDCH(top_y, i, ACS_URCORNER);
-
-    for (int i = top_y + 1; i < bottom_y; i++)
+ do
     {
-        MVADDCH(i, left_x, ACS_VLINE);
-        MVADDCH(i, right_x, ACS_VLINE);
-    }
+        werase(winGame.winBoard);
+        draw_game(gameInfo, winGame);
+        box(winGame.winBoard, 0, 0);
+        // if (c == KEY_UP ) y--;
+        // else if (c == KEY_DOWN ) y++;
+        // else if (c == KEY_LEFT ) x--;
+        // else if (c == KEY_RIGHT ) x++;
+        // mvwprintw(winGame.winBoard, y, x, "@");
+        wrefresh(winGame.winBoard);
+    } while ((c = getch()) != 27); //27 - ASCII code for ESC
+    
+    getch();
 
-    MVADDCH(bottom_y, left_x, ACS_LLCORNER);
-    i = left_x + 1;
-    for (;i < right_x; i++)
-        MVADDCH(bottom_y, i, ACS_HLINE);
-    MVADDCH(bottom_y, i, ACS_LRCORNER);
-}
-
-int main(){
-    initscr();
-    curs_set(0);
-    print_rectangle(0, HEIGHT, 0, WIDTH);
-     getch();  
     endwin();
 
-    return SUCCESS;
+    
 
+    /*
+    setup();
+    GameInfo_t gameInfo = [];
+    game_loop(gameInfo);{
+
+        draw(gameInfo); {
+            draw_field(gameInfo);
+            draw_score(gameInfo);
+            draw_record(gameInfo);
+            draw_level(gameInfo);
+        }
+        logic(gameInfo);{
+            
+
+            move(gameInfo);
+            rotate(gameInfo);
+
+        }
+
+    }
+
+    
+    */
+
+
+
+
+
+    // Figure_t *figure = get_figure();
+    // print_figure(figure, winGame.winNext);
+    //map[][]
+    //score
+   
+
+
+    
+    //очистка памяти
+
+    return 0;
 }
-
-
-
-
-// int main()
-// {
-//     initscr();
-//     //Выводим сообщение в центре окна stdscr
-//     print_rectangle(0, HEIGHT, 0, WIDTH);
-
-
-//     getch();    
-//     endwin();
-//     return 0;
-// }

@@ -1,0 +1,65 @@
+#ifndef TETRIS_H
+#define TETRIS_H
+
+
+#include <ncurses.h>
+#include <stdlib.h>
+
+#define RATIO 2
+
+//game board
+#define BOARD_WIDTH 10 * RATIO
+#define BOARD_HEIGHT 20
+
+//next board
+#define NEXT_WIDTH 7 * RATIO
+#define NEXT_HEIGHT 6
+
+//info board
+#define INFO_WIDTH 7 * RATIO
+#define INFO_HEIGHT 14
+
+//rules board
+#define RULES_WIDTH 17 * RATIO + 1
+#define RULES_HEIGHT 5
+
+
+#define FIGURE_SIZE 5
+
+typedef struct Figure{
+    int id;
+    int x[FIGURE_SIZE];
+    int y[FIGURE_SIZE];
+    int center_x;
+    int center_y;
+
+} Figure;
+
+
+
+typedef struct {
+    int **field;
+    int **next;
+    int score;
+    int high_score;
+    int level;
+    int speed;
+    int pause;
+    Figure cur_figure;
+    Figure next_figure;
+} GameInfo_t;
+
+
+
+typedef struct WinBlocks{
+    WINDOW *winBoard;
+    WINDOW *winNext;
+    WINDOW *winInfo;
+    WINDOW *winRules;
+} WinBlocks;
+
+
+
+
+
+#endif
