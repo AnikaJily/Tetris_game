@@ -9,6 +9,14 @@
   return matrix;
 }
 
+void clear_field(GameInfo_t *gameInfo) { //переделать
+  for (int i = 0; i < MATRIX_HEIGHT; i++) {
+    for (int j = 0; j < MATRIX_WIDTH; j++) {
+        gameInfo->field[i][j] = 0;
+    }
+  }
+}
+
 void delete_field(int** matrix) {
   for (int i = 0; i < BOARD_HEIGHT; i++) {
     free(matrix[i]);
@@ -30,7 +38,7 @@ Figure baseFigure() {
 }
 
 void Constructor(GameInfo_t *gameInfo) {
-    gameInfo->field = create_field(BOARD_HEIGHT, BOARD_WIDTH);
+    gameInfo->field = create_field(MATRIX_HEIGHT, MATRIX_WIDTH);
     gameInfo->next = create_field(NEXT_HEIGHT, NEXT_WIDTH);
     gameInfo->score = 0;
     gameInfo->high_score = 0;
@@ -42,95 +50,17 @@ void Constructor(GameInfo_t *gameInfo) {
 }
 
 
-
-
-// Figure get_Figure() {
-//     Figure new_figure;
-//       int my_brick[7][FIGURE_SIZE][FIGURE_SIZE] = {
-
-//       {{0, 0, 0, 0, 0},
-//        {0, 0, 1, 0, 0},
-//        {0, 1, 1, 1, 0},
-//        {0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0}},
-
-//       {{0, 0, 0, 0, 0},
-//        {0, 2, 2, 0, 0},
-//        {0, 0, 2, 2, 0},
-//        {0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0}},
-
-//       {{0, 0, 0, 0, 0},
-//        {0, 0, 3, 3, 0},
-//        {0, 3, 3, 0, 0},
-//        {0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0}},
-
-//       {{0, 0, 0, 0, 0},
-//        {0, 4, 0, 0, 0},
-//        {0, 4, 4, 4, 0},
-//        {0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0}},
-
-//       {{0, 0, 0, 0, 0},
-//        {0, 0, 0, 5, 0},
-//        {0, 5, 5, 5, 0},
-//        {0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0}},
-
-//       {{0, 0, 6, 0, 0},
-//        {0, 0, 6, 0, 0},
-//        {0, 0, 6, 0, 0},
-//        {0, 0, 6, 0, 0},
-//        {0, 0, 0, 0, 0}},
-
-//       {{0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0},
-//        {0, 0, 7, 7, 0},
-//        {0, 0, 7, 7, 0},
-//        {0, 0, 0, 0, 0}}
-
-//   };
-//     switch (new_figure.id)
-//     {
-//     case 1:
-//         copy_matrix(new_figure.matrix, my_brick[0]);
-//         break;
-//     case 2:
-//         copy_matrix(new_figure.matrix, my_brick[1]);
-//         break;
-//     case 3:
-//         copy_matrix(new_figure.matrix, my_brick[2]);
-//         break;        
-//     case 4:
-//         copy_matrix(new_figure.matrix, my_brick[3]);
-//         break;
-//     case 5:
-//         copy_matrix(new_figure.matrix, my_brick[4]);
-//         break;
-//     case 6:
-//         copy_matrix(new_figure.matrix, my_brick[5]);
-//         break;
-//     case 7:
-//         copy_matrix(new_figure.matrix, my_brick[6]);
-//         break;
-//     default:
-//         break;
-//     }
-
-//     return new_figure;
-// }
-
-
-
 void createNextFigure(GameInfo_t *gameInfo) {
-    int centerX = (BOARD_WIDTH - 1) / 2; // координата центра х
-    int ID = rand() % 7; // генерация id случайной фигуры
+    int centerX = MATRIX_WIDTH / 2; // координата центра х
+    int ID;
+    for (int i = 0; i < 8; i++) {  
+        ID = rand() % 7; 
+    }
     
-    //создание блоков по id
+    // int ID = random() % 7; 
+    // printf("%d\n", ID);
+     //создание блоков по id
     switch (ID) {
-
-    
     case 0:
         //##
         //##
@@ -238,9 +168,12 @@ void createNextFigure(GameInfo_t *gameInfo) {
     default:
         break;
     }
+
+
 }
 
 void FigureOnBoard(GameInfo_t *gameInfo) {
+   
     for (int i = 0; i < FIGURE_SIZE; i++) {
         if(gameInfo->next_figure.y[i] >= 0) {
             gameInfo->field[gameInfo->next_figure.y[i]][gameInfo->next_figure.x[i]] = gameInfo->next_figure.id;
@@ -248,14 +181,97 @@ void FigureOnBoard(GameInfo_t *gameInfo) {
     }
 }
 
+void FigureOnNextBoard(GameInfo_t *gameInfo) {
+    for (int i = 0; i < FIGURE_SIZE; i++) {
+            gameInfo->field[gameInfo->next_figure.y[i]][gameInfo->next_figure.x[i]] = gameInfo->next_figure.id;
+    }
+}
 
+
+int Move(GameInfo_t *gameInfo, int dx, int dy) {
+    
+    int MAXX = MATRIX_WIDTH;
+    int MAXY = MATRIX_HEIGHT;
+    
+    int newX[FIGURE_SIZE], newY[FIGURE_SIZE];
+
+    // Рассчитайте новые координаты
+    for (int i = 0; i < FIGURE_SIZE; i++) {
+        newX[i] = gameInfo->next_figure.x[i] + dx;
+        newY[i] = gameInfo->next_figure.y[i] + dy;
+        
+        // Проверьте новые координаты
+        if (newX[i] < 0 || newX[i] >= MAXX) {
+            // mvprintw(20,20,"newX: %d\n", newX[i]);
+        //      printw("newX: %d\n", newX[i]);
+        //  printw("newY: %d\n", newY[i]);
+            return 100;  // false
+        }
+
+        if (newY[i] > 0 && newY[i] < MAXY ) {
+            if (gameInfo->field[newX[i]][newY[i]] != 0) {
+        //         printw("gameInfo->field[newX[i]][newY[i]]: %d\n", gameInfo->field[newX[i]][newY[i]]);
+        //          printw("newX: %d\n", newX[i]);
+        //  printw("newY: %d\n", newY[i]);
+                return 200;  // false
+            }
+        } else if (newY[i] >= MAXY) {
+            return 300;  // false
+        }
+    }
+
+    // Назначаем новые координаты
+    for (int i = 0; i < FIGURE_SIZE; i++) {
+        gameInfo->next_figure.x[i] = newX[i];
+        gameInfo->next_figure.y[i] = newY[i];
+    }
+
+    gameInfo->next_figure.center_x += dx;
+    gameInfo->next_figure.center_y += dy;
+
+    return 1;  // true
+}
 
 
 void MoveFigure(GameInfo_t *gameInfo) {
     for (int i = 0; i < FIGURE_SIZE; i++) {
-        gameInfo->next_figure.y[i] = 6;
+        gameInfo->next_figure.y[i] += 5;
     }
     
+}
+
+// Реализация функции
+bool isRotatable(GameInfo_t *gameInfo) {
+
+    int MAXX = MATRIX_WIDTH;
+    int MAXY = MATRIX_HEIGHT;
+
+    int newX[FIGURE_SIZE], newY[FIGURE_SIZE];
+
+    // Рассчитайте новые координаты после поворота
+    for (int i = 0; i < FIGURE_SIZE; i++) {
+        int nx = gameInfo->cur_figure.x[i] - gameInfo->next_figure.center_x;
+        int ny = gameInfo->next_figure.y[i] - gameInfo->next_figure.center_y;
+
+        // Поворот на 90 градусов против часовой стрелки
+        newX[i] = nx * 0 + ny * (-1) + gameInfo->next_figure.center_x;
+        newY[i] = nx * 1 + ny * 0 + gameInfo->next_figure.center_y;
+
+        // Проверьте новые координаты
+        if (newX[i] < 0 || newX[i] >= MAXX) {
+            return false;
+        }
+
+        if (newY[i] >= 0 && newY[i] < MAXY) {
+            if (gameInfo->field[newX[i]][newY[i]] == 1) {
+                return false;
+            }
+        } else if (newY[i] >= MAXY) {
+            return false;
+        }
+    }
+
+    return true;
 }
 /*!
 Перемещение фигуры

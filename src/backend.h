@@ -8,6 +8,10 @@ void Constructor(GameInfo_t *gameInfo);
 
 void createNextFigure(GameInfo_t *gameInfo);
 void FigureOnBoard(GameInfo_t *gameInfo);
+int Move(GameInfo_t *gameInfo, int dx, int dy);
 void MoveFigure(GameInfo_t *gameInfo);
+
+void clear_field(GameInfo_t *gameInfo);
+bool isRotatable(GameInfo_t *gameInfo);
 
 #endif

@@ -4,12 +4,17 @@
 
 #include <ncurses.h>
 #include <stdlib.h>
+#include <stdlib.h>  // Для rand() и srand()
+#include <time.h>    // Для time()
 
 #define RATIO 2
 
+#define MATRIX_HEIGHT 20
+#define MATRIX_WIDTH 10
+
 //game board
-#define BOARD_WIDTH 10 * RATIO
-#define BOARD_HEIGHT 20
+#define BOARD_HEIGHT (MATRIX_HEIGHT + 2)
+#define BOARD_WIDTH (MATRIX_WIDTH * 2 + 2)
 
 //next board
 #define NEXT_WIDTH 7 * RATIO
@@ -24,7 +29,7 @@
 #define RULES_HEIGHT 5
 
 
-#define FIGURE_SIZE 5
+#define FIGURE_SIZE 4
 
 typedef struct Figure{
     int id;
@@ -57,9 +62,5 @@ typedef struct WinBlocks{
     WINDOW *winInfo;
     WINDOW *winRules;
 } WinBlocks;
-
-
-
-
 
 #endif
