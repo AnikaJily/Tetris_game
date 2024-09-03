@@ -1,12 +1,9 @@
-#include "test.h"
-#include "../tetris.h"
 #include "../backend.h"
 #include "../frontend.h"
+#include "../tetris.h"
+#include "test.h"
 
-START_TEST(test_s21_from_decimal_to_big) {
-  
-
-}
+START_TEST(test_s21_from_decimal_to_big) {}
 
 Suite* test_frontend(void) {
   Suite* s;

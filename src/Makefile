@@ -25,7 +25,7 @@ GCOV_FILES := $(shell find . -name '*.gcda' ) $(shell find . -name '*.gcno') $(s
 test: $(OBJECTS) $(TEST_OBJECTS)
 	$(CC) $(FLAGS) $(OBJECTS) $(TEST_OBJECTS)  -o test.out $(CHECK_FLAGS) -lncurses
 
-	./test.out
+	
 
 
 main: $(OBJECTS) clang
@@ -50,12 +50,12 @@ clean-all: clean
 	rm -f s21_decimal.a
 
 
-
 gcov_report: FLAGS += $(GCOV_FLAGS)
 gcov_report: clang test
 	./test.out
 	mkdir -p report
-	gcovr --html-details -o report/report.html --exclude tests/test.c 
+	gcovr --verbose --html-details -o report/report.html --exclude tests/test.c
+	open report/report.html
 
 
 

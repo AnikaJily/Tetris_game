@@ -18,6 +18,6 @@ int main(void) {
   {
     failed += run_test_suite(suite_array[i]);
   }
-  
+
   return (failed == 0) ? SUCCESS : FAILURE;
 }
