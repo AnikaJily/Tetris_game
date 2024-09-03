@@ -1,8 +1,6 @@
 CC = gcc
-FLAGS = 
-# -g -Wall -Wextra -Wall -std=c11 
-GCOV_FLAGS = 
-# -fprofile-arcs -ftest-coverage --coverage
+FLAGS =  -g -Wall -Wextra -Wall -std=c11 
+GCOV_FLAGS = -fprofile-arcs -ftest-coverage --coverage
 
 DEBUG = 0
 
@@ -24,15 +22,17 @@ TEST_SOURCES := $(shell find ./tests -name '*.c')
 TEST_OBJECTS := $(TEST_SOURCES:.c=.o)
 GCOV_FILES := $(shell find . -name '*.gcda' ) $(shell find . -name '*.gcno') $(shell find . -name '*.dSYM')  
 
+test: $(OBJECTS) $(TEST_OBJECTS)
+	$(CC) $(FLAGS) $(OBJECTS) $(TEST_OBJECTS)  -o test.out $(CHECK_FLAGS) -lncurses
 
+	./test.out
 
 
 main: $(OBJECTS) clang
 	$(CC) $(FLAGS) $(OBJECTS) main.c -o main.out -lncurses
 	./main.out
 
-clean:
-	rm main
+
 
 
 
@@ -44,6 +44,7 @@ clean:
 	rm -rf report
 	rm -f main.out test.out
 	rm -rf *.dSYM
+	rm main
 
 clean-all: clean
 	rm -f s21_decimal.a

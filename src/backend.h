@@ -5,6 +5,7 @@
 
 #include "tetris.h"
 Figure baseFigure();
+int **create_field(int y, int x);
 void Constructor(GameInfo_t *gameInfo);
 void Destructor(GameInfo_t *gameInfo);
 int isRotatable(GameInfo_t *gameInfo);
