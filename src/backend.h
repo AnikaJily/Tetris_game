@@ -6,8 +6,10 @@
 #include "tetris.h"
 Figure baseFigure();
 void Constructor(GameInfo_t *gameInfo);
+void Destructor(GameInfo_t *gameInfo);
 int isRotatable(GameInfo_t *gameInfo);
 void printCurFigureInfo(GameInfo_t *gameInfo);
+void delete_field(int **matrix);
 
 void createNextFigure(GameInfo_t *gameInfo);
 void createFigure(GameInfo_t *gameInfo);
@@ -23,6 +25,7 @@ int MoveLeft(GameInfo_t *gameInfo);
 int MoveRight(GameInfo_t *gameInfo);
 int MoveDown(GameInfo_t *gameInfo);
 int Rotate(GameInfo_t *gameInfo);
+void Drop(GameInfo_t *gameInfo);
 
 int killLines(GameInfo_t *gameInfo);
 int isEnd(GameInfo_t *gameInfo);

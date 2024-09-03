@@ -5,7 +5,15 @@
 #include "frontend.h"
 #include "tetris.h"
 
-typedef enum { START, SPAWN, MOVING, SHIFTING, ATTACHING, GAME_OVER } STATE;
+typedef enum {
+  START,
+  SPAWN,
+  MOVING,
+  SHIFTING,
+  ATTACHING,
+  GAME_OVER,
+  PAUSE
+} STATE;
 
 int main() {
   int c = 0;
@@ -20,7 +28,7 @@ int main() {
 
   STATE currectState = START;
   do {
-    mvprintw(50, 0, "STATE: %d", currectState);
+    // mvprintw(50, 0, "STATE: %d", currectState);
     clear_field(&gameInfo);
 
     switch (currectState) {
@@ -40,12 +48,14 @@ int main() {
         if (c == KEY_LEFT) MoveLeft(&gameInfo);
         if (c == KEY_RIGHT) MoveRight(&gameInfo);
         if (c == KEY_DOWN) MoveDown(&gameInfo);
+        if (c == 'q') currectState = GAME_OVER;
+        if (c == 'p') currectState = PAUSE;
 
         gettimeofday(&current_time, NULL);
         double dt = (current_time.tv_sec - last_fall_time.tv_sec) +
                     (current_time.tv_usec - last_fall_time.tv_usec) / 1000000.0;
 
-        if (dt >= TIME_FOR_SHIFT) {
+        if (dt >= TIME_FOR_SHIFT / (double)gameInfo.speed) {
           last_fall_time = current_time;
           currectState = SHIFTING;
         }
@@ -61,8 +71,14 @@ int main() {
       case ATTACHING:
         FixOnBoard(&gameInfo);
         lines_cleared = killLines(&gameInfo);
+
         if (lines_cleared > 0) {
-          // Можно добавить здесь логику для обновления уровня или скорости игры
+          if (gameInfo.score / 600 > 10)
+            gameInfo.level = 10;
+          else
+            gameInfo.level = gameInfo.score / 600 + 1;
+
+          gameInfo.speed = gameInfo.level * 10;
         }
 
         if (IsUp(&gameInfo)) {
@@ -75,22 +91,29 @@ int main() {
       case GAME_OVER:
         game_over(winGame.winBoard);
         break;
+      case PAUSE:
+        if (c == 'p') {
+          currectState = MOVING;
+        }
+        break;
 
       default:
         break;
     }
 
     FigureOnBoard(&gameInfo);
-    printCurFigureInfo(&gameInfo);
+    // printCurFigureInfo(&gameInfo);
     werase(winGame.winBoard);
     draw_game(gameInfo, winGame);
     box(winGame.winBoard, 0, 0);
 
     wrefresh(winGame.winBoard);
     c = getch();
-    if (c == 27) break;  // Выход при нажатии ESC
+    if (c == 'q') break;  // Выход при нажатии ESC
 
   } while (1);  // 27 - ASCII code for ESC
+
+  Destructor(&gameInfo);
 
   endwin();
 

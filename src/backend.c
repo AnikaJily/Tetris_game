@@ -179,12 +179,30 @@ void Constructor(GameInfo_t *gameInfo) {
   gameInfo->score = 0;
   gameInfo->record = 0;
   gameInfo->level = 1;
-  gameInfo->speed = 0;
+  gameInfo->speed = 1;
   gameInfo->pause = 0;
   gameInfo->cur_figure = baseFigure();
   gameInfo->next_figure = baseFigure();
   createNextFigure(gameInfo);
   FigureOnNext(gameInfo);
+}
+
+void Destructor(GameInfo_t *gameInfo) {
+  if (gameInfo->field) {
+    for (int i = 0; i < MATRIX_HEIGHT; i++) {
+      free(gameInfo->field[i]);
+    }
+    free(gameInfo->field);
+    gameInfo->field = NULL;
+  }
+
+  if (gameInfo->next) {
+    for (int i = 0; i < NEXT_HEIGHT; i++) {
+      free(gameInfo->next[i]);
+    }
+    free(gameInfo->next);
+    gameInfo->next = NULL;
+  }
 }
 
 void createFigure(GameInfo_t *gameInfo) {
@@ -337,6 +355,9 @@ int Rotate(GameInfo_t *gameInfo) {
     return 0;
 }
 
+void Drop(GameInfo_t *gameInfo) {
+  for (int i = 0; i < 20; i++) Move(gameInfo, 0, 1);
+}
 int MoveDown(GameInfo_t *gameInfo) {
   if (Move(gameInfo, 0, 1))
     return 1;
@@ -392,9 +413,6 @@ int killLines(GameInfo_t *gameInfo) {
         break;
       case 4:
         points = 1500;
-        break;
-      default:
-        points = 1500 * (lines_cleared - 3) + 700;
         break;
     }
     gameInfo->score += points;
