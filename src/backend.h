@@ -5,7 +5,7 @@
 #include <ncurses.h>
 Figure baseFigure();
 void Constructor(GameInfo_t *gameInfo);
-
+int isRotatable(GameInfo_t *gameInfo);
 void printCurFigureInfo(GameInfo_t *gameInfo);
 
 void createNextFigure(GameInfo_t *gameInfo);
@@ -17,6 +17,12 @@ void MoveFigure(GameInfo_t *gameInfo);
 
 void clear_field(GameInfo_t *gameInfo);
 void clear_next(GameInfo_t *gameInfo);
-int isRotatable(GameInfo_t *gameInfo);
+
+
+int MoveLeft(GameInfo_t *gameInfo);
+int MoveRight(GameInfo_t *gameInfo);
+int MoveDown(GameInfo_t *gameInfo);
+int Rotate(GameInfo_t *gameInfo);
+
 
 #endif

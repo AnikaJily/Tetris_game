@@ -52,6 +52,7 @@ void SetUp(WinBlocks *winGame) {
   keypad(stdscr, 1);  // allow arrow keys
   noecho();           // don't display input
   curs_set(0);        // hide cursor
+  timeout(500);
   getmaxyx(stdscr, rows, cols);
 
   CreateBoards(x, y, winGame);
