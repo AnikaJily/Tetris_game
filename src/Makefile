@@ -10,3 +10,7 @@ main: main.c backend.c frontend.c
 
 clean:
 	rm main
+
+
+clang: main.c backend.c frontend.c
+	clang-format --style=google -i main.c backend.c frontend.c

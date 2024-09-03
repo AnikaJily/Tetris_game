@@ -12,6 +12,7 @@ void CreateBoards(int y, int x, WinBlocks *winGame);
 void SetUp(WinBlocks *winGame);
 void draw_board(GameInfo_t gameInfo, WinBlocks winGame);
 void draw_game(GameInfo_t gameInfo,WinBlocks winGame);
+void draw_next(GameInfo_t gameInfo, WinBlocks winGame);
 
 
 #endif

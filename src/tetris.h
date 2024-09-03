@@ -12,13 +12,16 @@
 #define MATRIX_HEIGHT 20
 #define MATRIX_WIDTH 10
 
+#define MATRIX_NEXT_HEIGHT 6
+#define MATRIX_NEXT_WIDTH 6
+
 //game board
 #define BOARD_HEIGHT (MATRIX_HEIGHT + 2)
 #define BOARD_WIDTH (MATRIX_WIDTH * 2 + 2)
 
 //next board
-#define NEXT_WIDTH 7 * RATIO
-#define NEXT_HEIGHT 6
+#define NEXT_WIDTH MATRIX_NEXT_WIDTH * RATIO +2
+#define NEXT_HEIGHT MATRIX_NEXT_HEIGHT +2
 
 //info board
 #define INFO_WIDTH 7 * RATIO
@@ -30,6 +33,8 @@
 
 
 #define FIGURE_SIZE 4
+
+#define COLOR_ORANGE 8
 
 typedef struct Figure{
     int id;
