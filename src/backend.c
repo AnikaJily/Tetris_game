@@ -220,19 +220,17 @@ void printCurFigureInfo(GameInfo_t *gameInfo) {
   refresh();
 }
 
-
 void FixOnBoard(GameInfo_t *gameInfo) {
-    for (int i = 0; i < FIGURE_SIZE; i++) {
-        if (gameInfo->cur_figure.y[i] >= 0) {
-            gameInfo->field[gameInfo->cur_figure.y[i]][gameInfo->cur_figure.x[i]] = 8;
-        }
+  for (int i = 0; i < FIGURE_SIZE; i++) {
+    if (gameInfo->cur_figure.y[i] >= 0) {
+      gameInfo->field[gameInfo->cur_figure.y[i]][gameInfo->cur_figure.x[i]] = 8;
     }
+  }
 }
-
 
 // Реализация функции
 int isRotatable(GameInfo_t *gameInfo) {
-    if(gameInfo->cur_figure.id == 1) return 0;
+  if (gameInfo->cur_figure.id == 1) return 0;
 
   int MAXX = MATRIX_WIDTH;
   int MAXY = MATRIX_HEIGHT;
@@ -248,17 +246,14 @@ int isRotatable(GameInfo_t *gameInfo) {
     newX[i] = nx * 0 + ny * (-1) + gameInfo->cur_figure.center_x;
     newY[i] = nx * 1 + ny * 0 + gameInfo->cur_figure.center_y;
 
-    // Проверьте новые координаты
-    if (newX[i] < 0 || newX[i] >= MAXX) {
-      return 0;
+    if (newX[i] < 0 || newX[i] >= MAXX || newY[i] >= MAXY) {
+      //   printw("100");
+      return 0;  // false
     }
-if (gameInfo->field[newX[i]][newY[i]] == 8) {
-        return 0;
-      }
-    if (newY[i] >= 0 && newY[i] < MAXY) {
-      
-    } else if (newY[i] >= MAXY) {
-      return 0;
+
+    if (newY[i] >= 0 && gameInfo->field[newY[i]][newX[i]] != 0) {
+      //   printw("200");
+      return 0;  // false
     }
   }
 
@@ -271,7 +266,6 @@ if (gameInfo->field[newX[i]][newY[i]] == 8) {
   return 1;
 }
 
-
 int Move(GameInfo_t *gameInfo, int dx, int dy) {
   int MAXX = MATRIX_WIDTH;
   int MAXY = MATRIX_HEIGHT;
@@ -283,12 +277,12 @@ int Move(GameInfo_t *gameInfo, int dx, int dy) {
     newY[i] = gameInfo->cur_figure.y[i] + dy;
 
     if (newX[i] < 0 || newX[i] >= MAXX || newY[i] >= MAXY) {
-    //   printw("100");
+      //   printw("100");
       return 0;  // false
     }
 
     if (newY[i] >= 0 && gameInfo->field[newY[i]][newX[i]] != 0) {
-    //   printw("200");
+      //   printw("200");
       return 0;  // false
     }
   }
@@ -301,67 +295,53 @@ int Move(GameInfo_t *gameInfo, int dx, int dy) {
   gameInfo->cur_figure.center_x += dx;
   gameInfo->cur_figure.center_y += dy;
 
-//   if (dy > 0 || dx > 0 || dx < 0) {
-//     for (int i = 0; i < FIGURE_SIZE; i++) {
-//       if (gameInfo->cur_figure.y[i] == MAXY - 1 ||
-//           gameInfo->field[gameInfo->cur_figure.y[i] + 1]
-//                          [gameInfo->cur_figure.x[i]] == 8) {
-//         for (int j = 0; j < FIGURE_SIZE; j++) {
-//           gameInfo
-//               ->field[gameInfo->cur_figure.y[j]][gameInfo->cur_figure.x[j]] = 8;
-//         }
-//         printw("300");
-//         return 300;  // false
-//       }
-//     }
-//   }
-//   printw("1");
+  //   if (dy > 0 || dx > 0 || dx < 0) {
+  //     for (int i = 0; i < FIGURE_SIZE; i++) {
+  //       if (gameInfo->cur_figure.y[i] == MAXY - 1 ||
+  //           gameInfo->field[gameInfo->cur_figure.y[i] + 1]
+  //                          [gameInfo->cur_figure.x[i]] == 8) {
+  //         for (int j = 0; j < FIGURE_SIZE; j++) {
+  //           gameInfo
+  //               ->field[gameInfo->cur_figure.y[j]][gameInfo->cur_figure.x[j]]
+  //               = 8;
+  //         }
+  //         printw("300");
+  //         return 300;  // false
+  //       }
+  //     }
+  //   }
+  //   printw("1");
   return 1;  // true
 }
 
 int MoveLeft(GameInfo_t *gameInfo) {
-    if(Move(gameInfo, -1, 0)) return 1;
-    else return 0;
+  if (Move(gameInfo, -1, 0))
+    return 1;
+  else
+    return 0;
 }
 
 int MoveRight(GameInfo_t *gameInfo) {
-    if(Move(gameInfo, 1, 0)) return 1;
-    else return 0;
+  if (Move(gameInfo, 1, 0))
+    return 1;
+  else
+    return 0;
 }
 
 int Rotate(GameInfo_t *gameInfo) {
-    if(isRotatable(gameInfo)) return 1;
-    else return 0;
+  if (isRotatable(gameInfo))
+    return 1;
+  else
+    return 0;
 }
 
 int MoveDown(GameInfo_t *gameInfo) {
-    if(Move(gameInfo, 0, 1)) return 1;
-    else {
-        //isend killines
-        FixOnBoard(gameInfo);
-        createFigure(gameInfo);
-        return 0;
-
-    }
+  if (Move(gameInfo, 0, 1))
+    return 1;
+  else {
+    // isend killines
+    FixOnBoard(gameInfo);
+    createFigure(gameInfo);
+    return 0;
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
