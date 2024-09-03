@@ -49,10 +49,19 @@ void SetUp(WinBlocks *winGame) {
   init_pair(6, COLOR_BLACK, COLOR_YELLOW);
   init_pair(7, COLOR_BLACK, COLOR_CYAN);
   init_pair(8, COLOR_BLACK, COLOR_RED);
-  keypad(stdscr, 1);  // allow arrow keys
-  noecho();           // don't display input
-  curs_set(0);        // hide cursor
-  timeout(500);
+  keypad(stdscr, TRUE);  // Включаем обработку функциональных клавиш
+
+  // ... остальной код инициализации ...
+
+  // nodelay(winGame->winBoard, TRUE);  // Установка неблокирующего режима для
+  // окна
+  // keypad(winGame->winBoard,
+  //        TRUE);  // Включаем обработку функциональных клавиш для игрового
+  //        окна
+
+  noecho();     // don't display input
+  curs_set(0);  // hide cursor
+  timeout(12);
   getmaxyx(stdscr, rows, cols);
 
   CreateBoards(x, y, winGame);
@@ -79,7 +88,7 @@ void draw_board(GameInfo_t gameInfo, WinBlocks winGame) {
 
       // Отрисовываем блок
       mvwprintw(winGame.winBoard, vertical_offset + i,
-                horizontal_offset + j * 2, "%d ", gameInfo.field[i][j] % 100);
+                horizontal_offset + j * 2, "  ");
 
       // Отключаем цвет
       wattroff(winGame.winBoard, COLOR_PAIR(color));

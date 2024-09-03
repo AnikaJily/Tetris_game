@@ -6,6 +6,8 @@
 #include <stdlib.h>  // Для rand() и srand()
 #include <time.h>    // Для time()
 
+#define TIME_FOR_SHIFT 0.3
+
 #define RATIO 2
 
 #define MATRIX_HEIGHT 20
