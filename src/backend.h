@@ -24,4 +24,8 @@ int MoveRight(GameInfo_t *gameInfo);
 int MoveDown(GameInfo_t *gameInfo);
 int Rotate(GameInfo_t *gameInfo);
 
+int killLines(GameInfo_t *gameInfo);
+int isEnd(GameInfo_t *gameInfo);
+void FixOnBoard(GameInfo_t *gameInfo);
+int IsUp(GameInfo_t *gameInfo);
 #endif

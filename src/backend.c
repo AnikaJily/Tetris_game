@@ -56,18 +56,6 @@ Figure baseFigure() {
   return figure;
 }
 
-void Constructor(GameInfo_t *gameInfo) {
-  gameInfo->field = create_field(MATRIX_HEIGHT, MATRIX_WIDTH);
-  gameInfo->next = create_field(NEXT_HEIGHT, NEXT_WIDTH);
-  gameInfo->score = 0;
-  gameInfo->high_score = 0;
-  gameInfo->level = 1;
-  gameInfo->speed = 0;
-  gameInfo->pause = 0;
-  gameInfo->cur_figure = baseFigure();
-  gameInfo->next_figure = baseFigure();
-}
-
 void createNextFigure(GameInfo_t *gameInfo) {
   int centerX = MATRIX_WIDTH / 2;  // координата центра х
   int ID;
@@ -183,6 +171,19 @@ void createNextFigure(GameInfo_t *gameInfo) {
     default:
       break;
   }
+}
+
+void Constructor(GameInfo_t *gameInfo) {
+  gameInfo->field = create_field(MATRIX_HEIGHT, MATRIX_WIDTH);
+  gameInfo->next = create_field(NEXT_HEIGHT, NEXT_WIDTH);
+  gameInfo->score = 0;
+  gameInfo->record = 0;
+  gameInfo->level = 1;
+  gameInfo->speed = 0;
+  gameInfo->pause = 0;
+  gameInfo->cur_figure = baseFigure();
+  gameInfo->next_figure = baseFigure();
+  createNextFigure(gameInfo);
   FigureOnNext(gameInfo);
 }
 
@@ -196,6 +197,7 @@ void createFigure(GameInfo_t *gameInfo) {
   gameInfo->cur_figure.id = gameInfo->next_figure.id;
 
   createNextFigure(gameInfo);
+  FigureOnNext(gameInfo);
 }
 
 void FigureOnBoard(GameInfo_t *gameInfo) {
@@ -340,8 +342,74 @@ int MoveDown(GameInfo_t *gameInfo) {
     return 1;
   else {
     // isend killines
-    FixOnBoard(gameInfo);
-    createFigure(gameInfo);
+
     return 0;
   }
+}
+
+int killLines(GameInfo_t *gameInfo) {
+  int lines_cleared = 0;
+  int y, x, full_line;
+  int diff = 200;
+
+  for (y = MATRIX_HEIGHT - 1; y >= 0; y--) {
+    full_line = 1;
+    for (x = 0; x < MATRIX_WIDTH; x++) {
+      if (gameInfo->field[y][x] == 0) {
+        full_line = 0;
+        break;
+      }
+    }
+
+    if (full_line) {
+      lines_cleared++;
+      // Сдвигаем все линии выше текущей вниз
+      for (int i = y; i > 0; i--) {
+        for (x = 0; x < MATRIX_WIDTH; x++) {
+          gameInfo->field[i][x] = gameInfo->field[i - 1][x];
+        }
+      }
+      // Очищаем верхнюю линию
+      for (x = 0; x < MATRIX_WIDTH; x++) {
+        gameInfo->field[0][x] = 0;
+      }
+      y++;  // Проверяем эту же линию снова, так как мы сдвинули все вниз
+    }
+  }
+
+  // Обновляем счет
+  if (lines_cleared > 0) {
+    int points = 0;
+    switch (lines_cleared) {
+      case 1:
+        points = 100;
+        break;
+      case 2:
+        points = 300;
+        break;
+      case 3:
+        points = 700;
+        break;
+      case 4:
+        points = 1500;
+        break;
+      default:
+        points = 1500 * (lines_cleared - 3) + 700;
+        break;
+    }
+    gameInfo->score += points;
+    // Можно добавить логику повышения уровня здесь
+  }
+
+  return lines_cleared;
+}
+
+int IsUp(GameInfo_t *gameInfo) {
+  // если в верхней строке есть 1, то игра заканчивается
+  for (int i = 0; i < MATRIX_WIDTH; i++) {
+    if (gameInfo->field[0][i] == 8) {
+      return 1;  // если за гранью
+    }
+  }
+  return 0;  // норм
 }

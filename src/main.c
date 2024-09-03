@@ -9,6 +9,7 @@ typedef enum { START, SPAWN, MOVING, SHIFTING, ATTACHING, GAME_OVER } STATE;
 
 int main() {
   int c = 0;
+  int lines_cleared = 0;
   WinBlocks winGame;
   SetUp(&winGame);
   GameInfo_t gameInfo;
@@ -22,17 +23,15 @@ int main() {
     mvprintw(50, 0, "STATE: %d", currectState);
     clear_field(&gameInfo);
 
-
-
     switch (currectState) {
       case START:
 
         if (c == ' ') {
           currectState = SPAWN;
-          createNextFigure(&gameInfo);
         }
         break;
       case SPAWN:
+        FixOnBoard(&gameInfo);
         createFigure(&gameInfo);
         currectState = MOVING;
         break;
@@ -47,8 +46,8 @@ int main() {
                     (current_time.tv_usec - last_fall_time.tv_usec) / 1000000.0;
 
         if (dt >= TIME_FOR_SHIFT) {
-          currectState = SHIFTING;
           last_fall_time = current_time;
+          currectState = SHIFTING;
         }
 
         break;
@@ -60,9 +59,13 @@ int main() {
         }
         break;
       case ATTACHING:
-        // killines
-        
-        if (0 /*isEnd*/) {
+        FixOnBoard(&gameInfo);
+        lines_cleared = killLines(&gameInfo);
+        if (lines_cleared > 0) {
+          // Можно добавить здесь логику для обновления уровня или скорости игры
+        }
+
+        if (IsUp(&gameInfo)) {
           currectState = GAME_OVER;
         } else {
           currectState = SPAWN;
@@ -70,7 +73,7 @@ int main() {
 
         break;
       case GAME_OVER:
-        /* code */
+        game_over(winGame.winBoard);
         break;
 
       default:
@@ -87,51 +90,9 @@ int main() {
     c = getch();
     if (c == 27) break;  // Выход при нажатии ESC
 
-  } while (currectState != GAME_OVER);  // 27 - ASCII code for ESC
+  } while (1);  // 27 - ASCII code for ESC
 
   endwin();
 
   return 0;
 }
-// #include "backend.h"
-// #include "frontend.h"
-// #include "tetris.h"
-
-// int main() {
-//   int c;
-//   WinBlocks winGame;
-//   SetUp(&winGame);
-
-//   GameInfo_t gameInfo;
-//   Constructor(&gameInfo);
-//   srand((unsigned)time(NULL));
-//   createNextFigure(&gameInfo);
-//   createFigure(&gameInfo);
-//   Move(&gameInfo, 0, 5);
-//   printCurFigureInfo(&gameInfo);
-
-//   do {
-//     clear_field(&gameInfo);
-
-//     if (c == KEY_UP)
-//       Move(&gameInfo, 0, -1);
-//     else if (c == KEY_DOWN)
-//       Move(&gameInfo, 0, 1);
-//     else if (c == KEY_LEFT)
-//       Move(&gameInfo, -1, 0);
-//     else if (c == KEY_RIGHT)
-//       Move(&gameInfo, 1, 0);
-//     FigureOnBoard(&gameInfo);
-//     printCurFigureInfo(&gameInfo);
-//     werase(winGame.winBoard);
-//     draw_game(gameInfo, winGame);
-//     box(winGame.winBoard, 0, 0);
-//     wrefresh(winGame.winBoard);
-//   } while ((c = getch()) != 27);  // 27 - ASCII code for ESC
-
-//   getch();
-
-//   endwin();
-
-//   return 0;
-// }

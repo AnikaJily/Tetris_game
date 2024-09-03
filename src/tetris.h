@@ -49,7 +49,7 @@ typedef struct {
   int **field;
   int **next;
   int score;
-  int high_score;
+  int record;
   int level;
   int speed;
   int pause;

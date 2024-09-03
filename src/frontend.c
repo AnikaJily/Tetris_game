@@ -1,5 +1,3 @@
-
-
 #include "frontend.h"
 
 #include "tetris.h"
@@ -27,10 +25,17 @@ void CreateBoards(int y, int x, WinBlocks *winGame) {
   mvwprintw(winGame->winRules, 3, 18, "UP - rotate");
   wrefresh(winGame->winRules);
 
-  mvwprintw(winGame->winInfo, 1, 2, "SCORE:");
-  mvwprintw(winGame->winInfo, 4, 2, "RECORD:");
-  mvwprintw(winGame->winInfo, 7, 2, "LEVEL:");
-  wrefresh(winGame->winInfo);
+  // mvwprintw(winGame->winInfo, 1, 2, "SCORE:");
+  // mvwprintw(winGame->winInfo, 4, 2, "RECORD:");
+  // mvwprintw(winGame->winInfo, 7, 2, "LEVEL:");
+  // wrefresh(winGame->winInfo);
+}
+
+void draw_info(GameInfo_t gameInfo, WinBlocks winGame) {
+  mvwprintw(winGame.winInfo, 1, 2, "SCORE: %d", gameInfo.score);
+  mvwprintw(winGame.winInfo, 4, 2, "RECORD: %d", gameInfo.record);
+  mvwprintw(winGame.winInfo, 7, 2, "LEVEL: %d", gameInfo.level);
+  wrefresh(winGame.winInfo);
 }
 
 void SetUp(WinBlocks *winGame) {
@@ -61,15 +66,23 @@ void SetUp(WinBlocks *winGame) {
 
   noecho();     // don't display input
   curs_set(0);  // hide cursor
-  timeout(12);
+  timeout(15);
   getmaxyx(stdscr, rows, cols);
 
   CreateBoards(x, y, winGame);
 }
 
+void game_over(WINDOW *win) {
+  mvwprintw(win, BOARD_HEIGHT / 2 - 1, (BOARD_WIDTH / 2) - 5, "GAME OVER!");
+  wrefresh(win);
+  napms(3000);  // Добавьте задержку на 3 секунды, чтобы сообщение
+                // оставалось видимым
+}
+
 void draw_game(GameInfo_t gameInfo, WinBlocks winGame) {
   draw_board(gameInfo, winGame);
   draw_next(gameInfo, winGame);
+  draw_info(gameInfo, winGame);
 }
 
 void draw_board(GameInfo_t gameInfo, WinBlocks winGame) {
@@ -101,23 +114,18 @@ void draw_board(GameInfo_t gameInfo, WinBlocks winGame) {
 }
 
 void draw_next(GameInfo_t gameInfo, WinBlocks winGame) {
+  werase(winGame.winNext);
+  box(winGame.winNext, 0, 0);
+
   for (int i = 0; i < MATRIX_NEXT_HEIGHT; i++) {
     for (int j = 0; j < MATRIX_NEXT_WIDTH; j++) {
-      // Получаем цвет из матрицы
       int color = gameInfo.next[i][j];
-
-      // Устанавливаем цвет
-      wattron(winGame.winNext, COLOR_PAIR(color));
-
-      // Отрисовываем блок
-      mvwprintw(winGame.winNext, i + 1, j * 2 + 1, "  ");
-
-      // Отключаем цвет
-      wattroff(winGame.winNext, COLOR_PAIR(color));
+      if (color != 0) {
+        wattron(winGame.winNext, COLOR_PAIR(color));
+        mvwprintw(winGame.winNext, i + 1, j * 2 + 1, "  ");
+        wattroff(winGame.winNext, COLOR_PAIR(color));
+      }
     }
-    wprintw(winGame.winBoard, "\n");
   }
-
-  // Обновляем окно
   wrefresh(winGame.winNext);
 }
