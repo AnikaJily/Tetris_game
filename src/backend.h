@@ -12,6 +12,6 @@ int Move(GameInfo_t *gameInfo, int dx, int dy);
 void MoveFigure(GameInfo_t *gameInfo);
 
 void clear_field(GameInfo_t *gameInfo);
-bool isRotatable(GameInfo_t *gameInfo);
+int isRotatable(GameInfo_t *gameInfo);
 
 #endif

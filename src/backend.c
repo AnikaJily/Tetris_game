@@ -12,7 +12,9 @@
 void clear_field(GameInfo_t *gameInfo) { //переделать
   for (int i = 0; i < MATRIX_HEIGHT; i++) {
     for (int j = 0; j < MATRIX_WIDTH; j++) {
-        gameInfo->field[i][j] = 0;
+        if (gameInfo->field[i][j] != 8) {
+            gameInfo->field[i][j] = 0;
+        }
     }
   }
 }
@@ -87,7 +89,7 @@ void createNextFigure(GameInfo_t *gameInfo) {
         gameInfo->next_figure.y[2] = -1;
         gameInfo->next_figure.y[3] = -1;
         gameInfo->next_figure.center_x = centerX;
-        gameInfo->next_figure.center_y = 0;
+        gameInfo->next_figure.center_y = -1;
         gameInfo->next_figure.id = 2;
         break;
     case 2:
@@ -187,7 +189,6 @@ void FigureOnNextBoard(GameInfo_t *gameInfo) {
     }
 }
 
-
 int Move(GameInfo_t *gameInfo, int dx, int dy) {
     
     int MAXX = MATRIX_WIDTH;
@@ -202,17 +203,11 @@ int Move(GameInfo_t *gameInfo, int dx, int dy) {
         
         // Проверьте новые координаты
         if (newX[i] < 0 || newX[i] >= MAXX) {
-            // mvprintw(20,20,"newX: %d\n", newX[i]);
-        //      printw("newX: %d\n", newX[i]);
-        //  printw("newY: %d\n", newY[i]);
             return 100;  // false
         }
 
         if (newY[i] > 0 && newY[i] < MAXY ) {
             if (gameInfo->field[newX[i]][newY[i]] != 0) {
-        //         printw("gameInfo->field[newX[i]][newY[i]]: %d\n", gameInfo->field[newX[i]][newY[i]]);
-        //          printw("newX: %d\n", newX[i]);
-        //  printw("newY: %d\n", newY[i]);
                 return 200;  // false
             }
         } else if (newY[i] >= MAXY) {
@@ -241,7 +236,7 @@ void MoveFigure(GameInfo_t *gameInfo) {
 }
 
 // Реализация функции
-bool isRotatable(GameInfo_t *gameInfo) {
+int isRotatable(GameInfo_t *gameInfo) {
 
     int MAXX = MATRIX_WIDTH;
     int MAXY = MATRIX_HEIGHT;
@@ -250,7 +245,7 @@ bool isRotatable(GameInfo_t *gameInfo) {
 
     // Рассчитайте новые координаты после поворота
     for (int i = 0; i < FIGURE_SIZE; i++) {
-        int nx = gameInfo->cur_figure.x[i] - gameInfo->next_figure.center_x;
+        int nx = gameInfo->next_figure.x[i] - gameInfo->next_figure.center_x;
         int ny = gameInfo->next_figure.y[i] - gameInfo->next_figure.center_y;
 
         // Поворот на 90 градусов против часовой стрелки
@@ -259,148 +254,25 @@ bool isRotatable(GameInfo_t *gameInfo) {
 
         // Проверьте новые координаты
         if (newX[i] < 0 || newX[i] >= MAXX) {
-            return false;
+            return 01;
         }
 
         if (newY[i] >= 0 && newY[i] < MAXY) {
             if (gameInfo->field[newX[i]][newY[i]] == 1) {
-                return false;
+                return 02;
             }
         } else if (newY[i] >= MAXY) {
-            return false;
+            return 03;
         }
     }
 
-    return true;
+     // Назначаем новые координаты
+    for (int i = 0; i < FIGURE_SIZE; i++) {
+        gameInfo->next_figure.x[i] = newX[i];
+        gameInfo->next_figure.y[i] = newY[i];
+    }
+
+    
+
+    return 55;
 }
-/*!
-Перемещение фигуры
-
-
-\param dx Перемещение по х
-\param dy Перемещение по у
-
-
-*/
-// bool Tetris::move(int dx, int dy) {
-
-//     int newX[COUNT], newY[COUNT];
-
-//     for (int i = 0; i < COUNT; i++) {
-//         newX[i] = block.x[i] + dx;
-//         newY[i] = block.y[i] + dy;
-
-//         //проверим новые координаты
-
-//         if(newX[i] < 0 || newX[i] >= MAXX) {
-//             return false;
-//         }
-
-//         if(newY[i] >= 0 && newY[i] < MAXY) {
-//             if(box[newX[i]][newY[i]] == 1) {
-//                 return false;
-//             }
-//         }
-//         else if(newY[i] >= MAXY) {
-//             return false;
-//         }
-
-
-// // int main() {
-
-// //     int c;
-// //     int y = 11;
-// //     int x = 5;
-// //     int cols, rows;
-
-// //     initscr();
-// //     keypad(stdscr, 1); //allow arrow keys
-// //     noecho(); //don't display input
-// //     curs_set(0); //hide cursor
-// //     getmaxyx(stdscr, rows, cols);
-// //     char map[rows][cols];
-
-// //     do
-// //     {
-// //         for (int yy = 0; yy <= rows; yy++) {
-// //             for (int xx = 0; xx <= cols; xx++) {
-// //                 map[yy][xx] = '#';
-// //                 mvaddch(yy, xx, '#');
-// //             }
-// //         }
-
-// //         for (int yy = 5; yy <= rows / 2; yy++) {
-// //             for (int xx = 5; xx <= cols / 2; xx++) {
-// //                 map[yy][xx] = ' ';
-// //                 mvaddch(yy, xx, ' ');
-// //             }
-// //         }
-
-// //         //printw("rows - %d, cols - %d", rows, cols);
-// //         if (c == KEY_UP && mvinch(y-1, x) != '#' ) y--;
-// //         else if (c == KEY_DOWN && mvinch(y+1, x) != '#') y++;
-// //         else if (c == KEY_LEFT && mvinch(y, x-1) != '#') x--;
-// //         else if (c == KEY_RIGHT && mvinch(y, x+1) != '#') x++;
-// //         mvaddch(y, x, '@'); //print cursor
-// //     } while ((c = getch()) != 27); //27 - ASCII code for ESC
-    
-
-    
-// //     getch();
-
-// //     endwin();
-
-// //     return 0;
-// // }
-
-// #include "frontend.h"
-
-// int main() {
-
-//     int c;
-//     int y = 11;
-//     int x = 5;
-//     int cols, rows;
-
-//     initscr();
-//     keypad(stdscr, 1); //allow arrow keys
-//     noecho(); //don't display input
-//     curs_set(0); //hide cursor
-//     getmaxyx(stdscr, rows, cols);
-//     char map[rows][cols];
-
-
-//     mvwprintw(winGame->winBoard, 1, 1, "Hello, world!");
-
-//     do
-//     {
-//         for (int yy = 0; yy <= rows; yy++) {
-//             for (int xx = 0; xx <= cols; xx++) {
-//                 map[yy][xx] = '#';
-//                 mvaddch(yy, xx, '#');
-//             }
-//         }
-
-//         for (int yy = 5; yy <= rows / 2; yy++) {
-//             for (int xx = 5; xx <= cols / 2; xx++) {
-//                 map[yy][xx] = ' ';
-//                 mvaddch(yy, xx, ' ');
-//             }
-//         }
-
-//         //printw("rows - %d, cols - %d", rows, cols);
-//         if (c == KEY_UP && mvinch(y-1, x) != '#' ) y--;
-//         else if (c == KEY_DOWN && mvinch(y+1, x) != '#') y++;
-//         else if (c == KEY_LEFT && mvinch(y, x-1) != '#') x--;
-//         else if (c == KEY_RIGHT && mvinch(y, x+1) != '#') x++;
-//         mvaddch(y, x, '@'); //print cursor
-//     } while ((c = getch()) != 27); //27 - ASCII code for ESC
-    
-
-    
-//     getch();
-
-//     endwin();
-
-//     return 0;
-// }

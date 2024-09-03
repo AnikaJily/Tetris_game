@@ -48,7 +48,7 @@ void SetUp(WinBlocks *winGame) {
     init_pair(5, COLOR_BLACK, COLOR_ORANGE);
     init_pair(6, COLOR_BLACK, COLOR_YELLOW);
     init_pair(7, COLOR_BLACK, COLOR_CYAN);
-    init_pair(8, COLOR_WHITE, COLOR_BLACK);
+    init_pair(8, COLOR_BLACK, COLOR_RED);
     keypad(stdscr, 1); //allow arrow keys
     noecho(); //don't display input
     curs_set(0); //hide cursor
@@ -80,7 +80,7 @@ void draw_board(GameInfo_t gameInfo, WinBlocks winGame) {
             wattron(winGame.winBoard, COLOR_PAIR(color));
             
             // Отрисовываем блок
-            mvwprintw(winGame.winBoard, vertical_offset + i, horizontal_offset + j * 2, "  ");
+            mvwprintw(winGame.winBoard, vertical_offset + i, horizontal_offset + j * 2, "%d", gameInfo.field[i][j] % 100);
             
             // Отключаем цвет
             wattroff(winGame.winBoard, COLOR_PAIR(color));
@@ -93,3 +93,97 @@ void draw_board(GameInfo_t gameInfo, WinBlocks winGame) {
 }
 
 
+// int Move(GameInfo_t *gameInfo, int dx, int dy) {
+    
+//     int MAXX = MATRIX_WIDTH;
+//     int MAXY = MATRIX_HEIGHT;
+    
+//     int newX[FIGURE_SIZE], newY[FIGURE_SIZE];
+
+//     // Рассчитайте новые координаты
+//     for (int i = 0; i < FIGURE_SIZE; i++) {
+//         newX[i] = gameInfo->next_figure.x[i] + dx;
+//         newY[i] = gameInfo->next_figure.y[i] + dy;
+        
+//         // Проверьте новые координаты
+//         if (newX[i] < 0 || newX[i] >= MAXX) {
+//             // mvprintw(20,20,"newX: %d\n", newX[i]);
+//         //      printw("newX: %d\n", newX[i]);
+//         //  printw("newY: %d\n", newY[i]);
+//             return 100;  // false
+//         }
+
+//         if (newY[i] > 0 && newY[i] < MAXY ) {
+//             if (gameInfo->field[newX[i]][newY[i]] != 0) {
+//         //         printw("gameInfo->field[newX[i]][newY[i]]: %d\n", gameInfo->field[newX[i]][newY[i]]);
+//         //          printw("newX: %d\n", newX[i]);
+//         //  printw("newY: %d\n", newY[i]);
+//                 return 200;  // false
+//             }
+//         } else if (newY[i] >= MAXY) {
+//             return 300;  // false
+//         }
+//     }
+
+//     // Назначаем новые координаты
+//     for (int i = 0; i < FIGURE_SIZE; i++) {
+//         gameInfo->next_figure.x[i] = newX[i];
+//         gameInfo->next_figure.y[i] = newY[i];
+//     }
+
+//     gameInfo->next_figure.center_x += dx;
+//     gameInfo->next_figure.center_y += dy;
+
+//     return 1;  // true
+// }
+
+
+
+
+
+
+// int Move(GameInfo_t *gameInfo, int dx, int dy) {
+//     int MAXX = MATRIX_WIDTH;
+//     int MAXY = MATRIX_HEIGHT;
+
+//     int newX[FIGURE_SIZE], newY[FIGURE_SIZE];
+
+//     for (int i = 0; i < FIGURE_SIZE; i++) {
+//         newX[i] = gameInfo->next_figure.x[i] + dx;
+//         newY[i] = gameInfo->next_figure.y[i] + dy;
+
+//         if (newX[i] < 0 || newX[i] >= MAXX) {
+//             return 100;  // false
+//         }
+
+//         if (newY[i] >= 0 && gameInfo->field[newY[i]][newX[i]] != 0 ) {
+            
+//             return 200;  // false
+//         }
+//         if (newY[i] >= MAXY) {
+//             return 300;  // false
+//         }
+
+//     }
+
+//     for (int i = 0; i < FIGURE_SIZE; i++) {
+//         gameInfo->next_figure.x[i] = newX[i];
+//         gameInfo->next_figure.y[i] = newY[i];
+//     }
+
+//     gameInfo->next_figure.center_x += dx;
+//     gameInfo->next_figure.center_y += dy;
+
+//     if (dy > 0) {
+//         for (int i = 0; i < FIGURE_SIZE; i++) {
+//             if (gameInfo->next_figure.y[i] == MAXY - 1 || gameInfo->field[gameInfo->next_figure.y[i] + 1][gameInfo->next_figure.x[i]] == 8) {
+//                 for (int j = 0; j < FIGURE_SIZE; j++) {
+//                     gameInfo->field[gameInfo->next_figure.y[j]][gameInfo->next_figure.x[j]] = 8;
+//                 }
+//                 return 300;  // false
+//             }
+//         }
+//     }
+
+//     return 1;  // true
+// }
