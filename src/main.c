@@ -78,7 +78,7 @@ int main() {
           else
             gameInfo.level = gameInfo.score / 600 + 1;
 
-          gameInfo.speed = gameInfo.level * 10;
+          gameInfo.speed = gameInfo.level;
         }
 
         if (IsUp(&gameInfo)) {
@@ -90,6 +90,11 @@ int main() {
         break;
       case GAME_OVER:
         game_over(winGame.winBoard);
+        if (gameInfo.score > gameInfo.record) {
+          gameInfo.record = gameInfo.score;
+          save_record("record.txt",
+                      gameInfo.record);  // Сохранение рекорда в файл
+        }
         break;
       case PAUSE:
         if (c == 'p') {

@@ -7,7 +7,7 @@ void CreateBoards(int y, int x, WinBlocks *winGame) {
   winGame->winNext = newwin(NEXT_HEIGHT, NEXT_WIDTH, y, x + BOARD_WIDTH + 1);
   winGame->winInfo =
       newwin(INFO_HEIGHT, INFO_WIDTH, y + NEXT_HEIGHT, x + BOARD_WIDTH + 1);
-  winGame->winRules = newwin(RULES_HEIGHT, RULES_WIDTH, y + BOARD_HEIGHT, x);
+  winGame->winRules = newwin(RULES_HEIGHT, 37, y + BOARD_HEIGHT, x);
 
   refresh();
   box(winGame->winBoard, 0, 0);
@@ -24,17 +24,17 @@ void CreateBoards(int y, int x, WinBlocks *winGame) {
   mvwprintw(winGame->winRules, 1, 18, "<, >, v - move");
   mvwprintw(winGame->winRules, 3, 18, "UP - rotate");
   wrefresh(winGame->winRules);
-
-  // mvwprintw(winGame->winInfo, 1, 2, "SCORE:");
-  // mvwprintw(winGame->winInfo, 4, 2, "RECORD:");
-  // mvwprintw(winGame->winInfo, 7, 2, "LEVEL:");
-  // wrefresh(winGame->winInfo);
 }
 
 void draw_info(GameInfo_t gameInfo, WinBlocks winGame) {
-  mvwprintw(winGame.winInfo, 1, 2, "SCORE: %d", gameInfo.score);
-  mvwprintw(winGame.winInfo, 4, 2, "RECORD: %d", gameInfo.record);
-  mvwprintw(winGame.winInfo, 7, 2, "LEVEL: %d", gameInfo.level);
+  mvwprintw(winGame.winInfo, 1, 2, "SCORE: ");
+  mvwprintw(winGame.winInfo, 3, 2, "%d", gameInfo.score);
+
+  mvwprintw(winGame.winInfo, 5, 2, "RECORD: ");
+  mvwprintw(winGame.winInfo, 7, 2, "%d", gameInfo.record);
+
+  mvwprintw(winGame.winInfo, 9, 2, "LEVEL: ");
+  mvwprintw(winGame.winInfo, 11, 2, "%d", gameInfo.level);
   wrefresh(winGame.winInfo);
 }
 
@@ -55,14 +55,6 @@ void SetUp(WinBlocks *winGame) {
   init_pair(7, COLOR_BLACK, COLOR_CYAN);
   init_pair(8, COLOR_BLACK, COLOR_RED);
   keypad(stdscr, TRUE);  // Включаем обработку функциональных клавиш
-
-  // ... остальной код инициализации ...
-
-  // nodelay(winGame->winBoard, TRUE);  // Установка неблокирующего режима для
-  // окна
-  // keypad(winGame->winBoard,
-  //        TRUE);  // Включаем обработку функциональных клавиш для игрового
-  //        окна
 
   noecho();     // don't display input
   curs_set(0);  // hide cursor

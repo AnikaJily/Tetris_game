@@ -31,4 +31,7 @@ int killLines(GameInfo_t *gameInfo);
 int isEnd(GameInfo_t *gameInfo);
 void FixOnBoard(GameInfo_t *gameInfo);
 int IsUp(GameInfo_t *gameInfo);
+int load_record(const char *filename);
+void save_record(const char *filename, int newRecord);
+void update_record(GameInfo_t *gameInfo, const char *filename);
 #endif

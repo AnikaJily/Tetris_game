@@ -173,11 +173,39 @@ void createNextFigure(GameInfo_t *gameInfo) {
   }
 }
 
+int load_record(const char *filename) {
+  FILE *file = fopen(filename, "r");
+  int record = 0;
+  if (file) {
+    fscanf(file, "%d", &record);
+    fclose(file);
+  }
+  return record;
+}
+
+void save_record(const char *filename, int newRecord) {
+  FILE *file = fopen(filename, "w");
+  if (file) {
+    fprintf(file, "%d", newRecord);
+    fclose(file);
+  }
+}
+
+void update_record(GameInfo_t *gameInfo, const char *filename) {
+  int currentRecord = load_record(filename);
+  if (gameInfo->score > currentRecord) {
+    save_record(filename, gameInfo->score);
+    gameInfo->record = gameInfo->score;
+  } else {
+    gameInfo->record = currentRecord;
+  }
+}
+
 void Constructor(GameInfo_t *gameInfo) {
   gameInfo->field = create_field(MATRIX_HEIGHT, MATRIX_WIDTH);
   gameInfo->next = create_field(NEXT_HEIGHT, NEXT_WIDTH);
   gameInfo->score = 0;
-  gameInfo->record = 0;
+  gameInfo->record = load_record("record.txt");
   gameInfo->level = 1;
   gameInfo->speed = 1;
   gameInfo->pause = 0;
@@ -315,22 +343,6 @@ int Move(GameInfo_t *gameInfo, int dx, int dy) {
   gameInfo->cur_figure.center_x += dx;
   gameInfo->cur_figure.center_y += dy;
 
-  //   if (dy > 0 || dx > 0 || dx < 0) {
-  //     for (int i = 0; i < FIGURE_SIZE; i++) {
-  //       if (gameInfo->cur_figure.y[i] == MAXY - 1 ||
-  //           gameInfo->field[gameInfo->cur_figure.y[i] + 1]
-  //                          [gameInfo->cur_figure.x[i]] == 8) {
-  //         for (int j = 0; j < FIGURE_SIZE; j++) {
-  //           gameInfo
-  //               ->field[gameInfo->cur_figure.y[j]][gameInfo->cur_figure.x[j]]
-  //               = 8;
-  //         }
-  //         printw("300");
-  //         return 300;  // false
-  //       }
-  //     }
-  //   }
-  //   printw("1");
   return 1;  // true
 }
 
