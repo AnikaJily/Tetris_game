@@ -115,81 +115,83 @@ START_TEST(test_move_right) {
 END_TEST
 
 START_TEST(test_is_rotatable) {
-    GameInfo_t gameInfo;
-    Constructor(&gameInfo);
+  GameInfo_t gameInfo;
+  Constructor(&gameInfo);
 
-    // Устанавливаем фигуру, которую можно повернуть
-    gameInfo.cur_figure.id = 2;  // Пример: Идем к фигуре с ID 2
-    gameInfo.cur_figure.x[0] = 1;
-    gameInfo.cur_figure.x[1] = 2;
-    gameInfo.cur_figure.x[2] = 3;
-    gameInfo.cur_figure.x[3] = 4;
-    gameInfo.cur_figure.y[0] = 1;
-    gameInfo.cur_figure.y[1] = 1;
-    gameInfo.cur_figure.y[2] = 1;
-    gameInfo.cur_figure.y[3] = 1;
-    gameInfo.cur_figure.center_x = 2;
-    gameInfo.cur_figure.center_y = 1;
+  // Устанавливаем фигуру, которую можно повернуть
+  gameInfo.cur_figure.id = 2;  // Пример: Идем к фигуре с ID 2
+  gameInfo.cur_figure.x[0] = 1;
+  gameInfo.cur_figure.x[1] = 2;
+  gameInfo.cur_figure.x[2] = 3;
+  gameInfo.cur_figure.x[3] = 4;
+  gameInfo.cur_figure.y[0] = 1;
+  gameInfo.cur_figure.y[1] = 1;
+  gameInfo.cur_figure.y[2] = 1;
+  gameInfo.cur_figure.y[3] = 1;
+  gameInfo.cur_figure.center_x = 2;
+  gameInfo.cur_figure.center_y = 1;
 
-    ck_assert_int_eq(isRotatable(&gameInfo), 1);  // Ожидаем, что поворот возможен
+  ck_assert_int_eq(isRotatable(&gameInfo), 1);  // Ожидаем, что поворот возможен
 
-    // Устанавливаем фигуру, которую нельзя повернуть
-    gameInfo.cur_figure.id = 1;  // Пример: Идем к фигуре с ID 1 (если она не может быть повернута)
-    ck_assert_int_eq(isRotatable(&gameInfo), 0);  // Ожидаем, что поворот невозможен
+  // Устанавливаем фигуру, которую нельзя повернуть
+  gameInfo.cur_figure.id =
+      1;  // Пример: Идем к фигуре с ID 1 (если она не может быть повернута)
+  ck_assert_int_eq(isRotatable(&gameInfo),
+                   0);  // Ожидаем, что поворот невозможен
 
-    Destructor(&gameInfo);
+  Destructor(&gameInfo);
 }
 END_TEST
 
 START_TEST(test_move_down) {
-    GameInfo_t gameInfo;
-    Constructor(&gameInfo);
-    createFigure(&gameInfo);
+  GameInfo_t gameInfo;
+  Constructor(&gameInfo);
+  createFigure(&gameInfo);
 
-    // Устанавливаем начальные координаты
-    int initialY[FIGURE_SIZE];
-    for (int i = 0; i < FIGURE_SIZE; i++) {
-        initialY[i] = gameInfo.cur_figure.y[i];
-    }
+  // Устанавливаем начальные координаты
+  int initialY[FIGURE_SIZE];
+  for (int i = 0; i < FIGURE_SIZE; i++) {
+    initialY[i] = gameInfo.cur_figure.y[i];
+  }
 
-    MoveDown(&gameInfo);
+  MoveDown(&gameInfo);
 
-    // Проверяем, что фигура переместилась вниз
-    for (int i = 0; i < FIGURE_SIZE; i++) {
-        ck_assert_int_eq(gameInfo.cur_figure.y[i], initialY[i] + 1);
-    }
+  // Проверяем, что фигура переместилась вниз
+  for (int i = 0; i < FIGURE_SIZE; i++) {
+    ck_assert_int_eq(gameInfo.cur_figure.y[i], initialY[i] + 1);
+  }
 
-    Destructor(&gameInfo);
+  Destructor(&gameInfo);
 }
 END_TEST
 
 START_TEST(test_kill_lines) {
-    GameInfo_t gameInfo;
-    Constructor(&gameInfo);
+  GameInfo_t gameInfo;
+  Constructor(&gameInfo);
 
-    // Заполняем поле так, чтобы одна из линий была полной
+  // Заполняем поле так, чтобы одна из линий была полной
+  for (int x = 0; x < MATRIX_WIDTH; x++) {
+    gameInfo.field[MATRIX_HEIGHT - 1][x] = 1;
+  }
+
+  int lines_cleared = killLines(&gameInfo);
+
+  // Проверяем, что одна линия была очищена
+  ck_assert_int_eq(lines_cleared, 1);
+
+  // Проверяем, что все элементы в очищенной линии теперь равны 0
+  for (int x = 0; x < MATRIX_WIDTH; x++) {
+    ck_assert_int_eq(gameInfo.field[MATRIX_HEIGHT - 1][x], 0);
+  }
+
+  // Проверяем, что линии выше опустились
+  for (int y = MATRIX_HEIGHT - 2; y >= 0; y--) {
     for (int x = 0; x < MATRIX_WIDTH; x++) {
-        gameInfo.field[MATRIX_HEIGHT - 1][x] = 1;
+      ck_assert_int_eq(gameInfo.field[y + 1][x], gameInfo.field[y][x]);
     }
+  }
 
-    int lines_cleared = killLines(&gameInfo);
-
-    // Проверяем, что одна линия была очищена
-    ck_assert_int_eq(lines_cleared, 1);
-
-    // Проверяем, что все элементы в очищенной линии теперь равны 0
-    for (int x = 0; x < MATRIX_WIDTH; x++) {
-        ck_assert_int_eq(gameInfo.field[MATRIX_HEIGHT - 1][x], 0);
-    }
-
-    // Проверяем, что линии выше опустились
-    for (int y = MATRIX_HEIGHT - 2; y >= 0; y--) {
-        for (int x = 0; x < MATRIX_WIDTH; x++) {
-            ck_assert_int_eq(gameInfo.field[y + 1][x], gameInfo.field[y][x]);
-        }
-    }
-
-    Destructor(&gameInfo);
+  Destructor(&gameInfo);
 }
 END_TEST
 

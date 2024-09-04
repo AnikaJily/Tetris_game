@@ -1,7 +1,7 @@
 CC = gcc
-FLAGS =  -g -Wall -Wextra -Wall -std=c11 
-GCOV_FLAGS = -fprofile-arcs -ftest-coverage --coverage
+FLAGS =  -g -Wall -Wextra -Wall -std=c11 -fprofile-arcs -ftest-coverage --coverage
 
+GCOV_FLAGS = 
 DEBUG = 0
 
 
@@ -32,7 +32,8 @@ main: $(OBJECTS) clang
 	$(CC) $(FLAGS) $(OBJECTS) main.c -o main.out -lncurses
 	./main.out
 
-
+%.o: %.c
+	$(CC) $(FLAGS) -c $< -o $@
 
 
 
@@ -54,7 +55,7 @@ gcov_report: FLAGS += $(GCOV_FLAGS)
 gcov_report: clang test
 	./test.out
 	mkdir -p report
-	gcovr --verbose --html-details -o report/report.html --exclude tests/test.c
+	gcovr --verbose --html-details -o report/report.html --exclude tests/
 	open report/report.html
 
 
