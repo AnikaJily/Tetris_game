@@ -22,11 +22,10 @@ TEST_SOURCES := $(shell find ./tests -name '*.c')
 TEST_OBJECTS := $(TEST_SOURCES:.c=.o)
 GCOV_FILES := $(shell find . -name '*.gcda' ) $(shell find . -name '*.gcno') $(shell find . -name '*.dSYM')  
 
+all: main
+
 test: $(OBJECTS) $(TEST_OBJECTS)
 	$(CC) $(FLAGS) $(OBJECTS) $(TEST_OBJECTS)  -o test.out $(CHECK_FLAGS) -lncurses
-
-	
-
 
 main: $(OBJECTS) clang
 	$(CC) $(FLAGS) $(OBJECTS) main.c -o main.out -lncurses

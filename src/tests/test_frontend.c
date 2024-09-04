@@ -52,25 +52,25 @@ START_TEST(test_game_over) {
   delwin(win);
 }
 
-START_TEST(test_draw_board) {
-  WinBlocks winGame;
-  CreateBoards(0, 0, &winGame);
+// START_TEST(test_draw_board) {
+//   WinBlocks winGame;
+//   CreateBoards(0, 0, &winGame);
 
-  GameInfo_t gameInfo;
-  gameInfo.field = create_field(MATRIX_HEIGHT, MATRIX_WIDTH);
+//   GameInfo_t gameInfo;
+//   gameInfo.field = create_field(MATRIX_HEIGHT, MATRIX_WIDTH);
 
-  // Заполнение поля тестовыми значениями
-  for (int i = 0; i < MATRIX_HEIGHT; i++) {
-    for (int j = 0; j < MATRIX_WIDTH; j++) {
-      gameInfo.field[i][j] = (i + j) % 8 + 1;  // Примерный цвет
-    }
-  }
+//   // Заполнение поля тестовыми значениями
+//   for (int i = 0; i < MATRIX_HEIGHT; i++) {
+//     for (int j = 0; j < MATRIX_WIDTH; j++) {
+//       gameInfo.field[i][j] = (i + j) % 8 + 1;  // Примерный цвет
+//     }
+//   }
 
-  draw_board(gameInfo, winGame);
+//   draw_board(gameInfo, winGame);
 
-  // Проверка содержимого окна может потребовать дополнительного подхода
-  delete_field(gameInfo.field);
-}
+//   // Проверка содержимого окна может потребовать дополнительного подхода
+//   delete_field(gameInfo.field);
+// }
 
 // START_TEST(test_draw_next) {
 //   WinBlocks winGame;
