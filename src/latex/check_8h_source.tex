@@ -1,0 +1,760 @@
+\doxysection{check.\+h}
+\hypertarget{check_8h_source}{}\label{check_8h_source}\index{tests/check.h@{tests/check.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*-\/*-\/\ mode:C;\ -\/*-\/\ */}}
+\DoxyCodeLine{00002\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ Check:\ a\ unit\ test\ framework\ for\ C}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ Copyright\ (C)\ 2001,\ 2002\ Arien\ Malec}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ This\ library\ is\ free\ software;\ you\ can\ redistribute\ it\ and/or}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ modify\ it\ under\ the\ terms\ of\ the\ GNU\ Lesser\ General\ Public}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ License\ as\ published\ by\ the\ Free\ Software\ Foundation;\ either}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ version\ 2.1\ of\ the\ License,\ or\ (at\ your\ option)\ any\ later\ version.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ This\ library\ is\ distributed\ in\ the\ hope\ that\ it\ will\ be\ useful,}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ but\ WITHOUT\ ANY\ WARRANTY;\ without\ even\ the\ implied\ warranty\ of}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ MERCHANTABILITY\ or\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE.\ \ See\ the\ GNU}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ Lesser\ General\ Public\ License\ for\ more\ details.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ You\ should\ have\ received\ a\ copy\ of\ the\ GNU\ Lesser\ General\ Public}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ License\ along\ with\ this\ library;\ if\ not,\ write\ to\ the}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ Free\ Software\ Foundation,\ Inc.,\ 51\ Franklin\ St,\ Fifth\ Floor,\ Boston,}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ MA\ 02110-\/1301,\ USA.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ CHECK\_H}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ CHECK\_H}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <float.h>}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ \ \ Macros\ and\ functions\ starting\ with\ \_\ (underscore)\ are\ internal\ and}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ \ \ may\ change\ without\ notice.\ You\ have\ been\ warned!.}}
+\DoxyCodeLine{00034\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ CK\_CPPSTART\ extern\ "{}C"{}\ \{}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ CK\_CPPEND\ \}}}
+\DoxyCodeLine{00039\ CK\_CPPSTART}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#if\ defined(\_\_GNUC\_\_)\ \&\&\ defined(\_\_GNUC\_MINOR\_\_)\ \&\&\ defined(\_\_GNUC\_PATCHLEVEL\_\_)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ GCC\_VERSION\_AT\_LEAST(major,\ minor,\ patch)\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\ \ ((\_\_GNUC\_\_\ >\ (major))\ ||\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\ \ \ (\_\_GNUC\_\_\ ==\ (major)\ \&\&\ \_\_GNUC\_MINOR\_\_\ >\ (minor))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\ \ \ (\_\_GNUC\_\_\ ==\ (major)\ \&\&\ \_\_GNUC\_MINOR\_\_\ ==\ (minor)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\ \ \ \ \_\_GNUC\_PATCHLEVEL\_\_\ >=\ (patch)))}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#elif\ defined(\_\_GNUC\_\_)\ \&\&\ defined(\_\_GNUC\_MINOR\_\_)}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ GCC\_VERSION\_AT\_LEAST(major,\ minor,\ patch)\ \(\backslash\)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\ \ ((\_\_GNUC\_\_\ >\ (major))\ ||\ (\_\_GNUC\_\_\ ==\ (major)\ \&\&\ \_\_GNUC\_MINOR\_\_\ >=\ (minor)))}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ GCC\_VERSION\_AT\_LEAST(major,\ minor,\ patch)\ 0}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#if\ GCC\_VERSION\_AT\_LEAST(2,\ 95,\ 3)}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ CK\_ATTRIBUTE\_UNUSED\ \_\_attribute\_\_((unused))}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ CK\_ATTRIBUTE\_FORMAT(a,\ b,\ c)\ \_\_attribute\_\_((format(a,\ b,\ c)))}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{comment}{/*\ We\ use\ a\ private\ snprintf\ implementation\ that\ does\ not\ support\ the\ Windows}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ *\ format\ strings\ of\ \%I64u\ or\ similar\ and\ instead\ support\ the\ C99\ and\ GNU\ format}}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ *\ format\ strings\ like\ \%llu\ and\ \%zu.\ \ Let\ the\ compiler\ know\ this.\ */}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ CK\_ATTRIBUTE\_FORMAT\_PRINTF\ gnu\_printf}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ CK\_ATTRIBUTE\_FORMAT\_PRINTF\ printf}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ CK\_ATTRIBUTE\_UNUSED}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ CK\_ATTRIBUTE\_FORMAT(a,\ b,\ c)}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ CK\_ATTRIBUTE\_FORMAT\_PRINTF\ printf}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ GCC\ 2.95\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#if\ GCC\_VERSION\_AT\_LEAST(2,\ 5,\ 0)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ CK\_ATTRIBUTE\_NORETURN\ \_\_attribute\_\_((noreturn))}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ CK\_ATTRIBUTE\_NORETURN}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ GCC\ 2.5\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#if\ GCC\_VERSION\_AT\_LEAST(4,\ 7,\ 4)\ \&\&\ (\_\_STDC\_VERSION\_\_\ >=\ 199901L)}}
+\DoxyCodeLine{00090\ \textcolor{comment}{/*\ Operator\ \_Pragma\ introduced\ in\ C99\ */}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ CK\_DIAGNOSTIC\_STRINGIFY(x)\ \#x}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ CK\_DIAGNOSTIC\_HELPER1(y)\ \(\backslash\)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\ \ CK\_DIAGNOSTIC\_STRINGIFY(GCC\ diagnostic\ ignored\ y)}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ CK\_DIAGNOSTIC\_HELPER2(z)\ CK\_DIAGNOSTIC\_HELPER1(\#z)}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ CK\_DIAGNOSTIC\_PUSH\_IGNORE(w)\ \(\backslash\)}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\ \ \_Pragma("{}GCC\ diagnostic\ push"{})\ \_Pragma(CK\_DIAGNOSTIC\_HELPER2(w))}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ CK\_DIAGNOSTIC\_POP(w)\ \_Pragma("{}GCC\ diagnostic\ pop"{})}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ CK\_DIAGNOSTIC\_PUSH\_IGNORE(w)}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ CK\_DIAGNOSTIC\_POP(w)}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ GCC\ 4.7.4\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#undef\ GCC\_VERSION\_AT\_LEAST}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#include\ <sys/types.h>}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#if\ defined(\_MSC\_VER)}}
+\DoxyCodeLine{00108\ \textcolor{comment}{/*\ define\ pid\_t\ for\ Windows,\ as\ it\ is\ needed\ later\ */}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#define\ pid\_t\ int}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_MSC\_VER\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ *\ Used\ to\ create\ the\ linker\ script\ for\ hiding\ lib-\/local\ symbols.\ Shall}}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ *\ be\ put\ directly\ in\ front\ of\ the\ exported\ symbol.}}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ CK\_EXPORT}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ *\ Used\ for\ MSVC\ to\ create\ the\ export\ attribute}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ *\ CK\_DLL\_EXP\ is\ defined\ during\ the\ compilation\ of\ the\ library}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ *\ on\ the\ command\ line.}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *\ This\ definition\ is\ only\ used\ when\ building\ or\ linking\ to}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *\ the\ shared\ library,\ i.e.\ libcheck.so.\ When\ building\ the\ library}}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ *\ the\ value\ must\ be\ "{}\_declspec(dllexport)"{}.}}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ *\ When\ linking\ with\ the\ library,\ the\ value\ must\ be\ "{}\_declspec(dllimport)"{}}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *\ This\ is\ only\ used\ with\ Microsoft\ Visual\ C.\ In\ other\ systems}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *\ the\ value\ is\ empty.\ In\ MSVC\ the\ value\ is\ empty\ when\ linking\ with}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ *\ a\ static\ library.}}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#ifndef\ CK\_DLL\_EXP}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#define\ CK\_DLL\_EXP}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \textcolor{comment}{/*\ check\ version\ numbers\ */}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ CHECK\_MAJOR\_VERSION\ (0)}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ CHECK\_MINOR\_VERSION\ (15)}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ CHECK\_MICRO\_VERSION\ (2)}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ CK\_DLL\_EXP\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ CK\_EXPORT\ check\_major\_version;}
+\DoxyCodeLine{00143\ CK\_DLL\_EXP\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ CK\_EXPORT\ check\_minor\_version;}
+\DoxyCodeLine{00144\ CK\_DLL\_EXP\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ CK\_EXPORT\ check\_micro\_version;}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#ifndef\ NULL}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#define\ NULL\ ((void\ *)0)}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00157\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }TCase\ TCase;}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00162\ \textcolor{keyword}{typedef}\ void\ (*TFun)(int);}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00167\ \textcolor{keyword}{typedef}\ void\ (*SFun)(void);}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00172\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }Suite\ Suite;}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00177\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_t_test}{TTest}}\ \{}
+\DoxyCodeLine{00178\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name;}
+\DoxyCodeLine{00179\ \ \ TFun\ fn;}
+\DoxyCodeLine{00180\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file;}
+\DoxyCodeLine{00181\ \ \ \textcolor{keywordtype}{int}\ line;}
+\DoxyCodeLine{00182\ \}\ \mbox{\hyperlink{struct_t_test}{TTest}};}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00198\ CK\_DLL\_EXP\ Suite\ *CK\_EXPORT\ suite\_create(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00212\ CK\_DLL\_EXP\ \textcolor{keywordtype}{int}\ CK\_EXPORT\ suite\_tcase(Suite\ *s,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *tcname);}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00225\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ suite\_add\_tcase(Suite\ *s,\ TCase\ *tc);}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00240\ CK\_DLL\_EXP\ TCase\ *CK\_EXPORT\ tcase\_create(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00253\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ tcase\_set\_tags(TCase\ *tc,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *tags);}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#define\ tcase\_add\_test(tc,\ tf)\ tcase\_add\_test\_raise\_signal(tc,\ tf,\ 0)}}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\#define\ tcase\_add\_test\_raise\_signal(tc,\ ttest,\ signal)\ \(\backslash\)}}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\ \ \_tcase\_add\_test((tc),\ (ttest),\ (signal),\ 0,\ 0,\ 1)}}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\#define\ tcase\_add\_exit\_test(tc,\ ttest,\ expected\_exit\_value)\ \(\backslash\)}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\ \ \_tcase\_add\_test((tc),\ (ttest),\ 0,\ (expected\_exit\_value),\ 0,\ 1)}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\#define\ tcase\_add\_loop\_test(tc,\ ttest,\ s,\ e)\ \(\backslash\)}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\ \ \_tcase\_add\_test((tc),\ (ttest),\ 0,\ 0,\ (s),\ (e))}}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#define\ tcase\_add\_loop\_test\_raise\_signal(tc,\ ttest,\ signal,\ s,\ e)\ \(\backslash\)}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\ \ \_tcase\_add\_test((tc),\ (ttest),\ (signal),\ 0,\ (s),\ (e))}}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\#define\ tcase\_add\_loop\_exit\_test(tc,\ ttest,\ expected\_exit\_value,\ s,\ e)\ \(\backslash\)}}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\ \ \_tcase\_add\_test((tc),\ (ttest),\ 0,\ (expected\_exit\_value),\ (s),\ (e))}}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \textcolor{comment}{/*\ Add\ a\ test\ function\ to\ a\ test\ case}}
+\DoxyCodeLine{00354\ \textcolor{comment}{\ \ (function\ version\ -\/-\/\ use\ this\ when\ the\ macro\ won't\ work}}
+\DoxyCodeLine{00355\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00356\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ \_tcase\_add\_test(TCase\ *tc,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_t_test}{TTest}}\ *ttest,}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \_signal,\ \textcolor{keywordtype}{int}\ allowed\_exit\_value,}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ start,\ \textcolor{keywordtype}{int}\ end);}
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00385\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ tcase\_add\_unchecked\_fixture(TCase\ *tc,\ SFun\ setup,}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SFun\ teardown);}
+\DoxyCodeLine{00387\ }
+\DoxyCodeLine{00414\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ tcase\_add\_checked\_fixture(TCase\ *tc,\ SFun\ setup,}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SFun\ teardown);}
+\DoxyCodeLine{00416\ }
+\DoxyCodeLine{00437\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ tcase\_set\_timeout(TCase\ *tc,\ \textcolor{keywordtype}{double}\ timeout);}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ \textcolor{comment}{/*\ Internal\ function\ to\ mark\ the\ start\ of\ a\ test\ function\ */}}
+\DoxyCodeLine{00440\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ tcase\_fn\_start(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *fname,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file,}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ line);}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00451\ CK\_DLL\_EXP\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *CK\_EXPORT\ tcase\_name(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00452\ }
+\DoxyCodeLine{00460\ \textcolor{preprocessor}{\#define\ START\_TEST(\_\_testname)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00461\ \textcolor{preprocessor}{\ \ static\ void\ \_\_testname\#\#\_fn(int\ \_i\ CK\_ATTRIBUTE\_UNUSED);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00462\ \textcolor{preprocessor}{\ \ static\ const\ TTest\ \_\_testname\#\#\_ttest\ =\ \{"{}"{}\ \#\_\_testname,\ \_\_testname\#\#\_fn,\ \(\backslash\)}}
+\DoxyCodeLine{00463\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_FILE\_\_,\ \_\_LINE\_\_\};\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00464\ \textcolor{preprocessor}{\ \ static\ const\ TTest\ *\_\_testname\ =\ \&\_\_testname\#\#\_ttest;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00465\ \textcolor{preprocessor}{\ \ static\ void\ \_\_testname\#\#\_fn(int\ \_i\ CK\_ATTRIBUTE\_UNUSED)}}
+\DoxyCodeLine{00466\ }
+\DoxyCodeLine{00472\ \textcolor{preprocessor}{\#define\ END\_TEST}}
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00475\ \textcolor{comment}{\ *\ Fail\ the\ test\ case\ unless\ expr\ is\ false}}
+\DoxyCodeLine{00476\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00477\ \textcolor{comment}{\ *\ This\ call\ is\ deprecated.}}
+\DoxyCodeLine{00478\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00479\ \textcolor{preprocessor}{\#define\ fail\_unless(expr,\ ...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00480\ \textcolor{preprocessor}{\ \ (expr)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00481\ \textcolor{preprocessor}{\ \ \ \ \ \ ?\ \_mark\_point(\_\_FILE\_\_,\ \_\_LINE\_\_)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00482\ \textcolor{preprocessor}{\ \ \ \ \ \ :\ \_ck\_assert\_failed(\_\_FILE\_\_,\ \_\_LINE\_\_,\ "{}Assertion\ '"{}\ \#expr\ "{}'\ failed"{},\ \(\backslash\)}}
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\#\_\_VA\_ARGS\_\_,\ NULL)}}
+\DoxyCodeLine{00484\ }
+\DoxyCodeLine{00485\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00486\ \textcolor{comment}{\ *\ Fail\ the\ test\ case\ if\ expr\ is\ false}}
+\DoxyCodeLine{00487\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00488\ \textcolor{comment}{\ *\ This\ call\ is\ deprecated.}}
+\DoxyCodeLine{00489\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00490\ \textcolor{comment}{\ *\ NOTE:\ The\ space\ before\ the\ comma\ sign\ before\ \#\#\ is\ essential\ to\ be\ compatible}}
+\DoxyCodeLine{00491\ \textcolor{comment}{\ *\ with\ gcc\ 2.95.3\ and\ earlier.}}
+\DoxyCodeLine{00492\ \textcolor{comment}{\ *\ FIXME:\ these\ macros\ may\ conflict\ with\ C89\ if\ expr\ is}}
+\DoxyCodeLine{00493\ \textcolor{comment}{\ *\ FIXME:\ \ \ strcmp\ (str1,\ str2)\ due\ to\ excessive\ string\ length.}}
+\DoxyCodeLine{00494\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\#define\ fail\_if(expr,\ ...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\ \ (expr)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00497\ \textcolor{preprocessor}{\ \ \ \ \ \ ?\ \_ck\_assert\_failed(\_\_FILE\_\_,\ \_\_LINE\_\_,\ "{}Failure\ '"{}\ \#expr\ "{}'\ occurred"{},\ \(\backslash\)}}
+\DoxyCodeLine{00498\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\#\_\_VA\_ARGS\_\_,\ NULL)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00499\ \textcolor{preprocessor}{\ \ \ \ \ \ :\ \_mark\_point(\_\_FILE\_\_,\ \_\_LINE\_\_)}}
+\DoxyCodeLine{00500\ }
+\DoxyCodeLine{00501\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00502\ \textcolor{comment}{\ *\ Fail\ the\ test}}
+\DoxyCodeLine{00503\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00504\ \textcolor{comment}{\ *\ This\ call\ is\ deprecated.}}
+\DoxyCodeLine{00505\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00506\ \textcolor{preprocessor}{\#define\ fail(...)\ \(\backslash\)}}
+\DoxyCodeLine{00507\ \textcolor{preprocessor}{\ \ \_ck\_assert\_failed(\_\_FILE\_\_,\ \_\_LINE\_\_,\ "{}Failed"{},\ \#\#\_\_VA\_ARGS\_\_,\ NULL)}}
+\DoxyCodeLine{00508\ }
+\DoxyCodeLine{00509\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00510\ \textcolor{comment}{\ *\ This\ is\ called\ whenever\ an\ assertion\ fails.}}
+\DoxyCodeLine{00511\ \textcolor{comment}{\ *\ Note\ that\ it\ only\ has\ the\ noreturn\ modifier\ when}}
+\DoxyCodeLine{00512\ \textcolor{comment}{\ *\ using\ fork.\ If\ fork\ is\ unavailable,\ the\ function}}
+\DoxyCodeLine{00513\ \textcolor{comment}{\ *\ calls\ longjmp()\ when\ a\ test\ assertion\ fails.\ Marking}}
+\DoxyCodeLine{00514\ \textcolor{comment}{\ *\ the\ function\ as\ noreturn\ causes\ gcc\ to\ make\ assumptions}}
+\DoxyCodeLine{00515\ \textcolor{comment}{\ *\ which\ are\ not\ valid,\ as\ longjmp()\ is\ like\ a\ return.}}
+\DoxyCodeLine{00516\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00517\ \textcolor{preprocessor}{\#if\ 1}}
+\DoxyCodeLine{00518\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ \_ck\_assert\_failed(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keywordtype}{int}\ line,}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *expr,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *msg,}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ...)\ CK\_ATTRIBUTE\_NORETURN}
+\DoxyCodeLine{00521\ \ \ \ \ CK\_ATTRIBUTE\_FORMAT(CK\_ATTRIBUTE\_FORMAT\_PRINTF,\ 4,\ 5);}
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00523\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ \_ck\_assert\_failed(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keywordtype}{int}\ line,}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *expr,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *msg,}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ...)}
+\DoxyCodeLine{00526\ \ \ \ \ CK\_ATTRIBUTE\_FORMAT(CK\_ATTRIBUTE\_FORMAT\_PRINTF,\ 4,\ 5);}
+\DoxyCodeLine{00527\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00538\ \textcolor{preprocessor}{\#define\ ck\_assert(expr)\ ck\_assert\_msg(expr,\ NULL)}}
+\DoxyCodeLine{00539\ }
+\DoxyCodeLine{00540\ \textcolor{comment}{/*\ The\ space\ before\ the\ comma\ sign\ before\ \#\#\ is\ essential\ to\ be\ compatible}}
+\DoxyCodeLine{00541\ \textcolor{comment}{\ \ \ with\ gcc\ 2.95.3\ and\ earlier.}}
+\DoxyCodeLine{00542\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00553\ \textcolor{preprocessor}{\#define\ ck\_assert\_msg(expr,\ ...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00554\ \textcolor{preprocessor}{\ \ (expr)\ ?\ \_mark\_point(\_\_FILE\_\_,\ \_\_LINE\_\_)\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00555\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ :\ \_ck\_assert\_failed(\_\_FILE\_\_,\ \_\_LINE\_\_,\ \(\backslash\)}}
+\DoxyCodeLine{00556\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Assertion\ '"{}\ \#expr\ "{}'\ failed"{},\ \#\#\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00565\ \textcolor{preprocessor}{\#define\ ck\_abort()\ ck\_abort\_msg(NULL)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00575\ \textcolor{preprocessor}{\#define\ ck\_abort\_msg(...)\ \(\backslash\)}}
+\DoxyCodeLine{00576\ \textcolor{preprocessor}{\ \ \_ck\_assert\_failed(\_\_FILE\_\_,\ \_\_LINE\_\_,\ "{}Failed"{},\ \#\#\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00577\ }
+\DoxyCodeLine{00578\ \textcolor{comment}{/*\ Signed\ and\ unsigned\ integer\ comparison\ macros\ with\ improved\ output\ compared}}
+\DoxyCodeLine{00579\ \textcolor{comment}{\ *\ to\ ck\_assert().\ */}}
+\DoxyCodeLine{00580\ \textcolor{comment}{/*\ OP\ may\ be\ any\ comparison\ operator.\ */}}
+\DoxyCodeLine{00581\ \textcolor{preprocessor}{\#define\ \_ck\_assert\_int(X,\ OP,\ Y)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00583\ \textcolor{preprocessor}{\ \ \ \ intmax\_t\ \_ck\_x\ =\ (X);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00584\ \textcolor{preprocessor}{\ \ \ \ intmax\_t\ \_ck\_y\ =\ (Y);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\ \ \ \ ck\_assert\_msg(\_ck\_x\ OP\ \_ck\_y,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00586\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Assertion\ '\%s'\ failed:\ \%s\ ==\ \%jd,\ \%s\ ==\ \%jd"{},\ \(\backslash\)}}
+\DoxyCodeLine{00587\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#X\ "{}\ "{}\ \#OP\ "{}\ "{}\ \#Y,\ \#X,\ \_ck\_x,\ \#Y,\ \_ck\_y);\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\ \ \}\ while\ (0)}}
+\DoxyCodeLine{00589\ }
+\DoxyCodeLine{00602\ \textcolor{preprocessor}{\#define\ ck\_assert\_int\_eq(X,\ Y)\ \_ck\_assert\_int(X,\ ==,\ Y)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00615\ \textcolor{preprocessor}{\#define\ ck\_assert\_int\_ne(X,\ Y)\ \_ck\_assert\_int(X,\ !=,\ Y)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00628\ \textcolor{preprocessor}{\#define\ ck\_assert\_int\_lt(X,\ Y)\ \_ck\_assert\_int(X,\ <,\ Y)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00641\ \textcolor{preprocessor}{\#define\ ck\_assert\_int\_le(X,\ Y)\ \_ck\_assert\_int(X,\ <=,\ Y)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00654\ \textcolor{preprocessor}{\#define\ ck\_assert\_int\_gt(X,\ Y)\ \_ck\_assert\_int(X,\ >,\ Y)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00667\ \textcolor{preprocessor}{\#define\ ck\_assert\_int\_ge(X,\ Y)\ \_ck\_assert\_int(X,\ >=,\ Y)}}
+\DoxyCodeLine{00668\ }
+\DoxyCodeLine{00669\ \textcolor{preprocessor}{\#define\ \_ck\_assert\_uint(X,\ OP,\ Y)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00670\ \textcolor{preprocessor}{\ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00671\ \textcolor{preprocessor}{\ \ \ \ uintmax\_t\ \_ck\_x\ =\ (X);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00672\ \textcolor{preprocessor}{\ \ \ \ uintmax\_t\ \_ck\_y\ =\ (Y);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00673\ \textcolor{preprocessor}{\ \ \ \ ck\_assert\_msg(\_ck\_x\ OP\ \_ck\_y,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00674\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Assertion\ '\%s'\ failed:\ \%s\ ==\ \%ju,\ \%s\ ==\ \%ju"{},\ \(\backslash\)}}
+\DoxyCodeLine{00675\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#X\ "{}\ "{}\ \#OP\ "{}\ "{}\ \#Y,\ \#X,\ \_ck\_x,\ \#Y,\ \_ck\_y);\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00676\ \textcolor{preprocessor}{\ \ \}\ while\ (0)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00689\ \textcolor{preprocessor}{\#define\ ck\_assert\_uint\_eq(X,\ Y)\ \_ck\_assert\_uint(X,\ ==,\ Y)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00702\ \textcolor{preprocessor}{\#define\ ck\_assert\_uint\_ne(X,\ Y)\ \_ck\_assert\_uint(X,\ !=,\ Y)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\#define\ ck\_assert\_uint\_lt(X,\ Y)\ \_ck\_assert\_uint(X,\ <,\ Y)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00728\ \textcolor{preprocessor}{\#define\ ck\_assert\_uint\_le(X,\ Y)\ \_ck\_assert\_uint(X,\ <=,\ Y)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00741\ \textcolor{preprocessor}{\#define\ ck\_assert\_uint\_gt(X,\ Y)\ \_ck\_assert\_uint(X,\ >,\ Y)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00754\ \textcolor{preprocessor}{\#define\ ck\_assert\_uint\_ge(X,\ Y)\ \_ck\_assert\_uint(X,\ >=,\ Y)}}
+\DoxyCodeLine{00755\ }
+\DoxyCodeLine{00756\ \textcolor{comment}{/*\ Number\ of\ digits\ after\ the\ decimal\ point\ to\ output\ via\ printf\ */}}
+\DoxyCodeLine{00757\ \textcolor{preprocessor}{\#ifndef\ CK\_FLOATING\_DIG}}
+\DoxyCodeLine{00758\ \textcolor{preprocessor}{\#define\ CK\_FLOATING\_DIG\ 6}}
+\DoxyCodeLine{00759\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ CK\_FLOATING\_DIG\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00760\ }
+\DoxyCodeLine{00761\ \textcolor{comment}{/*\ Floating\ point\ number\ comparison\ macros\ with\ improved\ output}}
+\DoxyCodeLine{00762\ \textcolor{comment}{\ *\ compared\ to\ ck\_assert().\ */}}
+\DoxyCodeLine{00763\ \textcolor{comment}{/*\ OP\ may\ be\ any\ comparison\ operator,\ TP\ is\ type,\ TM\ is\ type\ modifier.\ */}}
+\DoxyCodeLine{00764\ \textcolor{preprocessor}{\#define\ \_ck\_assert\_floating(X,\ OP,\ Y,\ TP,\ TM)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00765\ \textcolor{preprocessor}{\ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00766\ \textcolor{preprocessor}{\ \ \ \ TP\ \_ck\_x\ =\ (X);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00767\ \textcolor{preprocessor}{\ \ \ \ TP\ \_ck\_y\ =\ (Y);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00768\ \textcolor{preprocessor}{\ \ \ \ ck\_assert\_msg(\_ck\_x\ OP\ \_ck\_y,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00769\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Assertion\ '\%s'\ failed:\ \%s\ ==\ \%.*"{}\ TM\ "{}g,\ \%s\ ==\ \%.*"{}\ TM\ "{}g"{},\ \(\backslash\)}}
+\DoxyCodeLine{00770\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#X\ "{}\ "{}\ \#OP\ "{}\ "{}\ \#Y,\ \#X,\ (int)CK\_FLOATING\_DIG,\ \_ck\_x,\ \#Y,\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00771\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (int)CK\_FLOATING\_DIG,\ \_ck\_y);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00772\ \textcolor{preprocessor}{\ \ \}\ while\ (0)}}
+\DoxyCodeLine{00773\ }
+\DoxyCodeLine{00774\ \textcolor{comment}{/*\ Check\ floating\ point\ number\ is\ finise.\ */}}
+\DoxyCodeLine{00775\ \textcolor{comment}{/*\ TP\ is\ type,\ TM\ is\ type\ modifier.\ */}}
+\DoxyCodeLine{00776\ \textcolor{preprocessor}{\#define\ \_ck\_assert\_floating\_finite(X,\ TP,\ TM)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00777\ \textcolor{preprocessor}{\ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00778\ \textcolor{preprocessor}{\ \ \ \ TP\ \_ck\_x\ =\ (X);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00779\ \textcolor{preprocessor}{\ \ \ \ ck\_assert\_msg(isfinite(\_ck\_x),\ "{}Assertion\ '\%s'\ failed:\ \%s\ ==\ \%.*"{}\ TM\ "{}g"{},\ \(\backslash\)}}
+\DoxyCodeLine{00780\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#X\ "{}\ is\ finite"{},\ \#X,\ (int)CK\_FLOATING\_DIG,\ \_ck\_x);\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00781\ \textcolor{preprocessor}{\ \ \}\ while\ (0)}}
+\DoxyCodeLine{00782\ }
+\DoxyCodeLine{00783\ \textcolor{comment}{/*\ Check\ floating\ point\ number\ is\ infinise.\ */}}
+\DoxyCodeLine{00784\ \textcolor{comment}{/*\ TP\ is\ type,\ TM\ is\ type\ modifier.\ */}}
+\DoxyCodeLine{00785\ \textcolor{preprocessor}{\#define\ \_ck\_assert\_floating\_infinite(X,\ TP,\ TM)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00786\ \textcolor{preprocessor}{\ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00787\ \textcolor{preprocessor}{\ \ \ \ TP\ \_ck\_x\ =\ (X);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00788\ \textcolor{preprocessor}{\ \ \ \ ck\_assert\_msg(isinf(\_ck\_x),\ "{}Assertion\ '\%s'\ failed:\ \%s\ ==\ \%.*"{}\ TM\ "{}g"{},\ \(\backslash\)}}
+\DoxyCodeLine{00789\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#X\ "{}\ is\ infinite"{},\ \#X,\ (int)CK\_FLOATING\_DIG,\ \_ck\_x);\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00790\ \textcolor{preprocessor}{\ \ \}\ while\ (0)}}
+\DoxyCodeLine{00791\ }
+\DoxyCodeLine{00792\ \textcolor{comment}{/*\ Check\ floating\ point\ number\ is\ "{}Not\ a\ Number"{}.\ */}}
+\DoxyCodeLine{00793\ \textcolor{comment}{/*\ TP\ is\ type,\ TM\ is\ type\ modifier.\ */}}
+\DoxyCodeLine{00794\ \textcolor{preprocessor}{\#define\ \_ck\_assert\_floating\_nan(X,\ TP,\ TM)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00795\ \textcolor{preprocessor}{\ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00796\ \textcolor{preprocessor}{\ \ \ \ TP\ \_ck\_x\ =\ (X);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00797\ \textcolor{preprocessor}{\ \ \ \ ck\_assert\_msg(isnan(\_ck\_x),\ "{}Assertion\ '\%s'\ failed:\ \%s\ ==\ \%.*"{}\ TM\ "{}g"{},\ \(\backslash\)}}
+\DoxyCodeLine{00798\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#X\ "{}\ is\ NaN"{},\ \#X,\ (int)CK\_FLOATING\_DIG,\ \_ck\_x);\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00799\ \textcolor{preprocessor}{\ \ \}\ while\ (0)}}
+\DoxyCodeLine{00800\ }
+\DoxyCodeLine{00801\ \textcolor{comment}{/*\ Check\ floating\ point\ number\ is\ not\ "{}Not\ a\ Number"{}.\ */}}
+\DoxyCodeLine{00802\ \textcolor{comment}{/*\ TP\ is\ type,\ TM\ is\ type\ modifier.\ */}}
+\DoxyCodeLine{00803\ \textcolor{preprocessor}{\#define\ \_ck\_assert\_floating\_nonnan(X,\ TP,\ TM)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00804\ \textcolor{preprocessor}{\ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00805\ \textcolor{preprocessor}{\ \ \ \ TP\ \_ck\_x\ =\ (X);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00806\ \textcolor{preprocessor}{\ \ \ \ ck\_assert\_msg(!isnan(\_ck\_x),\ "{}Assertion\ '\%s'\ failed:\ \%s\ ==\ \%.*"{}\ TM\ "{}g"{},\ \(\backslash\)}}
+\DoxyCodeLine{00807\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#X\ "{}\ is\ not\ NaN"{},\ \#X,\ (int)CK\_FLOATING\_DIG,\ \_ck\_x);\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00808\ \textcolor{preprocessor}{\ \ \}\ while\ (0)}}
+\DoxyCodeLine{00809\ }
+\DoxyCodeLine{00810\ \textcolor{comment}{/*\ Floating\ point\ tolerance\ comparison\ macros\ with\ improved\ output}}
+\DoxyCodeLine{00811\ \textcolor{comment}{\ *\ compared\ to\ ck\_assert().\ */}}
+\DoxyCodeLine{00812\ \textcolor{comment}{/*\ OP,\ D\ can\ have\ values:\ >,\ -\/1;\ <,\ 1.\ */}}
+\DoxyCodeLine{00813\ \textcolor{preprocessor}{\#define\ \_ck\_assert\_floating\_op\_tol(X,\ OP,\ Y,\ T,\ D,\ TP,\ TM)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00814\ \textcolor{preprocessor}{\ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00815\ \textcolor{preprocessor}{\ \ \ \ TP\ \_ck\_x\ =\ (X);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00816\ \textcolor{preprocessor}{\ \ \ \ TP\ \_ck\_y\ =\ (Y);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00817\ \textcolor{preprocessor}{\ \ \ \ TP\ \_ck\_t\ =\ (T);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00818\ \textcolor{preprocessor}{\ \ \ \ ck\_assert\_msg((\_ck\_x\ -\/\ \_ck\_y)\ OP\ \_ck\_t\ *(D),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00819\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Assertion\ '\%s'\ failed:\ \%s\ ==\ \%.*"{}\ TM\ "{}g,\ \%s\ ==\ \%.*"{}\ TM\ \(\backslash\)}}
+\DoxyCodeLine{00820\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}g,\ \%s\ ==\ \%.*"{}\ TM\ "{}g"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00821\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#X\ "{}\ "{}\ \#OP\ "{}=\ "{}\ \#Y\ "{},\ error\ <\ "{}\ \#T,\ \#X,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00822\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (int)CK\_FLOATING\_DIG,\ \_ck\_x,\ \#Y,\ (int)CK\_FLOATING\_DIG,\ \ \(\backslash\)}}
+\DoxyCodeLine{00823\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_ck\_y,\ \#T,\ (int)CK\_FLOATING\_DIG,\ \_ck\_t);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00824\ \textcolor{preprocessor}{\ \ \}\ while\ (0)}}
+\DoxyCodeLine{00825\ }
+\DoxyCodeLine{00826\ \textcolor{comment}{/*\ Floating\ point\ tolerance\ comparison\ macros\ with\ improved\ output}}
+\DoxyCodeLine{00827\ \textcolor{comment}{\ *\ compared\ to\ ck\_assert().\ */}}
+\DoxyCodeLine{00828\ \textcolor{comment}{/*\ OP\ can\ have\ values:\ <;\ >=.\ */}}
+\DoxyCodeLine{00829\ \textcolor{preprocessor}{\#define\ \_ck\_assert\_floating\_absdiff\_op\_tol(X,\ Y,\ OP,\ T,\ TP,\ TM)\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00830\ \textcolor{preprocessor}{\ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00831\ \textcolor{preprocessor}{\ \ \ \ TP\ \_ck\_x\ =\ (X);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00832\ \textcolor{preprocessor}{\ \ \ \ TP\ \_ck\_y\ =\ (Y);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00833\ \textcolor{preprocessor}{\ \ \ \ TP\ \_ck\_t\ =\ (T);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00834\ \textcolor{preprocessor}{\ \ \ \ ck\_assert\_msg(fabsl(\_ck\_y\ -\/\ \_ck\_x)\ OP\ \_ck\_t,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00835\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Assertion\ '\%s'\ failed:\ \%s\ ==\ \%.*"{}\ TM\ "{}g,\ \%s\ ==\ \%.*"{}\ TM\ \(\backslash\)}}
+\DoxyCodeLine{00836\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}g,\ \%s\ ==\ \%.*"{}\ TM\ "{}g"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00837\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}fabsl("{}\ \#Y\ "{}\ -\/\ "{}\ \#X\ "{})\ "{}\ \#OP\ "{}\ "{}\ \#T,\ \#X,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00838\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (int)CK\_FLOATING\_DIG,\ \_ck\_x,\ \#Y,\ (int)CK\_FLOATING\_DIG,\ \ \(\backslash\)}}
+\DoxyCodeLine{00839\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_ck\_y,\ \#T,\ (int)CK\_FLOATING\_DIG,\ \_ck\_t);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00840\ \textcolor{preprocessor}{\ \ \}\ while\ (0)}}
+\DoxyCodeLine{00841\ }
+\DoxyCodeLine{00858\ \textcolor{preprocessor}{\#define\ ck\_assert\_float\_eq(X,\ Y)\ \_ck\_assert\_floating(X,\ ==,\ Y,\ float,\ "{}"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00875\ \textcolor{preprocessor}{\#define\ ck\_assert\_float\_ne(X,\ Y)\ \_ck\_assert\_floating(X,\ !=,\ Y,\ float,\ "{}"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00888\ \textcolor{preprocessor}{\#define\ ck\_assert\_float\_lt(X,\ Y)\ \_ck\_assert\_floating(X,\ <,\ Y,\ float,\ "{}"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00901\ \textcolor{preprocessor}{\#define\ ck\_assert\_float\_le(X,\ Y)\ \_ck\_assert\_floating(X,\ <=,\ Y,\ float,\ "{}"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00914\ \textcolor{preprocessor}{\#define\ ck\_assert\_float\_gt(X,\ Y)\ \_ck\_assert\_floating(X,\ >,\ Y,\ float,\ "{}"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00927\ \textcolor{preprocessor}{\#define\ ck\_assert\_float\_ge(X,\ Y)\ \_ck\_assert\_floating(X,\ >=,\ Y,\ float,\ "{}"{})}}
+\DoxyCodeLine{00928\ }
+\DoxyCodeLine{00943\ \textcolor{preprocessor}{\#define\ ck\_assert\_float\_eq\_tol(X,\ Y,\ T)\ \(\backslash\)}}
+\DoxyCodeLine{00944\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_absdiff\_op\_tol(X,\ Y,\ <,\ T,\ float,\ "{}"{})}}
+\DoxyCodeLine{00945\ }
+\DoxyCodeLine{00960\ \textcolor{preprocessor}{\#define\ ck\_assert\_float\_ne\_tol(X,\ Y,\ T)\ \(\backslash\)}}
+\DoxyCodeLine{00961\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_absdiff\_op\_tol(X,\ Y,\ >=,\ T,\ float,\ "{}"{})}}
+\DoxyCodeLine{00962\ }
+\DoxyCodeLine{00977\ \textcolor{preprocessor}{\#define\ ck\_assert\_float\_ge\_tol(X,\ Y,\ T)\ \(\backslash\)}}
+\DoxyCodeLine{00978\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_op\_tol(X,\ >,\ Y,\ T,\ -\/1,\ float,\ "{}"{})}}
+\DoxyCodeLine{00979\ }
+\DoxyCodeLine{00994\ \textcolor{preprocessor}{\#define\ ck\_assert\_float\_le\_tol(X,\ Y,\ T)\ \(\backslash\)}}
+\DoxyCodeLine{00995\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_op\_tol(X,\ <,\ Y,\ T,\ 1,\ float,\ "{}"{})}}
+\DoxyCodeLine{00996\ }
+\DoxyCodeLine{01009\ \textcolor{preprocessor}{\#define\ ck\_assert\_float\_finite(X)\ \_ck\_assert\_floating\_finite(X,\ float,\ "{}"{})}}
+\DoxyCodeLine{01010\ }
+\DoxyCodeLine{01023\ \textcolor{preprocessor}{\#define\ ck\_assert\_float\_infinite(X)\ \_ck\_assert\_floating\_infinite(X,\ float,\ "{}"{})}}
+\DoxyCodeLine{01024\ }
+\DoxyCodeLine{01037\ \textcolor{preprocessor}{\#define\ ck\_assert\_float\_nan(X)\ \_ck\_assert\_floating\_nan(X,\ float,\ "{}"{})}}
+\DoxyCodeLine{01038\ }
+\DoxyCodeLine{01051\ \textcolor{preprocessor}{\#define\ ck\_assert\_float\_nonnan(X)\ \_ck\_assert\_floating\_nonnan(X,\ float,\ "{}"{})}}
+\DoxyCodeLine{01052\ }
+\DoxyCodeLine{01069\ \textcolor{preprocessor}{\#define\ ck\_assert\_double\_eq(X,\ Y)\ \_ck\_assert\_floating(X,\ ==,\ Y,\ double,\ "{}"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01086\ \textcolor{preprocessor}{\#define\ ck\_assert\_double\_ne(X,\ Y)\ \_ck\_assert\_floating(X,\ !=,\ Y,\ double,\ "{}"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01099\ \textcolor{preprocessor}{\#define\ ck\_assert\_double\_lt(X,\ Y)\ \_ck\_assert\_floating(X,\ <,\ Y,\ double,\ "{}"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01112\ \textcolor{preprocessor}{\#define\ ck\_assert\_double\_le(X,\ Y)\ \_ck\_assert\_floating(X,\ <=,\ Y,\ double,\ "{}"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01125\ \textcolor{preprocessor}{\#define\ ck\_assert\_double\_gt(X,\ Y)\ \_ck\_assert\_floating(X,\ >,\ Y,\ double,\ "{}"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01138\ \textcolor{preprocessor}{\#define\ ck\_assert\_double\_ge(X,\ Y)\ \_ck\_assert\_floating(X,\ >=,\ Y,\ double,\ "{}"{})}}
+\DoxyCodeLine{01139\ }
+\DoxyCodeLine{01154\ \textcolor{preprocessor}{\#define\ ck\_assert\_double\_eq\_tol(X,\ Y,\ T)\ \(\backslash\)}}
+\DoxyCodeLine{01155\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_absdiff\_op\_tol(X,\ Y,\ <,\ T,\ double,\ "{}"{})}}
+\DoxyCodeLine{01156\ }
+\DoxyCodeLine{01171\ \textcolor{preprocessor}{\#define\ ck\_assert\_double\_ne\_tol(X,\ Y,\ T)\ \(\backslash\)}}
+\DoxyCodeLine{01172\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_absdiff\_op\_tol(X,\ Y,\ >=,\ T,\ double,\ "{}"{})}}
+\DoxyCodeLine{01173\ }
+\DoxyCodeLine{01188\ \textcolor{preprocessor}{\#define\ ck\_assert\_double\_ge\_tol(X,\ Y,\ T)\ \(\backslash\)}}
+\DoxyCodeLine{01189\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_op\_tol(X,\ >,\ Y,\ T,\ -\/1,\ double,\ "{}"{})}}
+\DoxyCodeLine{01190\ }
+\DoxyCodeLine{01205\ \textcolor{preprocessor}{\#define\ ck\_assert\_double\_le\_tol(X,\ Y,\ T)\ \(\backslash\)}}
+\DoxyCodeLine{01206\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_op\_tol(X,\ <,\ Y,\ T,\ 1,\ double,\ "{}"{})}}
+\DoxyCodeLine{01207\ }
+\DoxyCodeLine{01220\ \textcolor{preprocessor}{\#define\ ck\_assert\_double\_finite(X)\ \_ck\_assert\_floating\_finite(X,\ double,\ "{}"{})}}
+\DoxyCodeLine{01221\ }
+\DoxyCodeLine{01234\ \textcolor{preprocessor}{\#define\ ck\_assert\_double\_infinite(X)\ \_ck\_assert\_floating\_infinite(X,\ double,\ "{}"{})}}
+\DoxyCodeLine{01235\ }
+\DoxyCodeLine{01248\ \textcolor{preprocessor}{\#define\ ck\_assert\_double\_nan(X)\ \_ck\_assert\_floating\_nan(X,\ double,\ "{}"{})}}
+\DoxyCodeLine{01249\ }
+\DoxyCodeLine{01262\ \textcolor{preprocessor}{\#define\ ck\_assert\_double\_nonnan(X)\ \_ck\_assert\_floating\_nonnan(X,\ double,\ "{}"{})}}
+\DoxyCodeLine{01263\ }
+\DoxyCodeLine{01280\ \textcolor{preprocessor}{\#define\ ck\_assert\_ldouble\_eq(X,\ Y)\ \(\backslash\)}}
+\DoxyCodeLine{01281\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating(X,\ ==,\ Y,\ long\ double,\ "{}L"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01298\ \textcolor{preprocessor}{\#define\ ck\_assert\_ldouble\_ne(X,\ Y)\ \(\backslash\)}}
+\DoxyCodeLine{01299\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating(X,\ !=,\ Y,\ long\ double,\ "{}L"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01312\ \textcolor{preprocessor}{\#define\ ck\_assert\_ldouble\_lt(X,\ Y)\ \(\backslash\)}}
+\DoxyCodeLine{01313\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating(X,\ <,\ Y,\ long\ double,\ "{}L"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01326\ \textcolor{preprocessor}{\#define\ ck\_assert\_ldouble\_le(X,\ Y)\ \(\backslash\)}}
+\DoxyCodeLine{01327\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating(X,\ <=,\ Y,\ long\ double,\ "{}L"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01340\ \textcolor{preprocessor}{\#define\ ck\_assert\_ldouble\_gt(X,\ Y)\ \(\backslash\)}}
+\DoxyCodeLine{01341\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating(X,\ >,\ Y,\ long\ double,\ "{}L"{})}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01354\ \textcolor{preprocessor}{\#define\ ck\_assert\_ldouble\_ge(X,\ Y)\ \(\backslash\)}}
+\DoxyCodeLine{01355\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating(X,\ >=,\ Y,\ long\ double,\ "{}L"{})}}
+\DoxyCodeLine{01356\ }
+\DoxyCodeLine{01371\ \textcolor{preprocessor}{\#define\ ck\_assert\_ldouble\_eq\_tol(X,\ Y,\ T)\ \(\backslash\)}}
+\DoxyCodeLine{01372\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_absdiff\_op\_tol(X,\ Y,\ <,\ T,\ long\ double,\ "{}L"{})}}
+\DoxyCodeLine{01373\ }
+\DoxyCodeLine{01388\ \textcolor{preprocessor}{\#define\ ck\_assert\_ldouble\_ne\_tol(X,\ Y,\ T)\ \(\backslash\)}}
+\DoxyCodeLine{01389\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_absdiff\_op\_tol(X,\ Y,\ >=,\ T,\ long\ double,\ "{}L"{})}}
+\DoxyCodeLine{01390\ }
+\DoxyCodeLine{01405\ \textcolor{preprocessor}{\#define\ ck\_assert\_ldouble\_ge\_tol(X,\ Y,\ T)\ \(\backslash\)}}
+\DoxyCodeLine{01406\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_op\_tol(X,\ >,\ Y,\ T,\ -\/1,\ long\ double,\ "{}L"{})}}
+\DoxyCodeLine{01407\ }
+\DoxyCodeLine{01422\ \textcolor{preprocessor}{\#define\ ck\_assert\_ldouble\_le\_tol(X,\ Y,\ T)\ \(\backslash\)}}
+\DoxyCodeLine{01423\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_op\_tol(X,\ <,\ Y,\ T,\ 1,\ long\ double,\ "{}L"{})}}
+\DoxyCodeLine{01424\ }
+\DoxyCodeLine{01437\ \textcolor{preprocessor}{\#define\ ck\_assert\_ldouble\_finite(X)\ \(\backslash\)}}
+\DoxyCodeLine{01438\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_finite(X,\ long\ double,\ "{}L"{})}}
+\DoxyCodeLine{01439\ }
+\DoxyCodeLine{01452\ \textcolor{preprocessor}{\#define\ ck\_assert\_ldouble\_infinite(X)\ \(\backslash\)}}
+\DoxyCodeLine{01453\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_infinite(X,\ long\ double,\ "{}L"{})}}
+\DoxyCodeLine{01454\ }
+\DoxyCodeLine{01467\ \textcolor{preprocessor}{\#define\ ck\_assert\_ldouble\_nan(X)\ \_ck\_assert\_floating\_nan(X,\ long\ double,\ "{}L"{})}}
+\DoxyCodeLine{01468\ }
+\DoxyCodeLine{01481\ \textcolor{preprocessor}{\#define\ ck\_assert\_ldouble\_nonnan(X)\ \(\backslash\)}}
+\DoxyCodeLine{01482\ \textcolor{preprocessor}{\ \ \_ck\_assert\_floating\_nonnan(X,\ long\ double,\ "{}L"{})}}
+\DoxyCodeLine{01483\ }
+\DoxyCodeLine{01484\ \textcolor{comment}{/*\ String\ comparison\ macros\ with\ improved\ output\ compared\ to\ ck\_assert()\ */}}
+\DoxyCodeLine{01485\ \textcolor{comment}{/*\ OP\ might\ be\ any\ operator\ that\ can\ be\ used\ in\ '0\ OP\ strcmp(X,Y)'\ comparison.}}
+\DoxyCodeLine{01486\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01487\ \textcolor{comment}{/*\ String\ pointer\ could\ be\ compared\ againts\ NULL\ with\ ==\ (NULLEQ\ =\ 1)\ and\ !=}}
+\DoxyCodeLine{01488\ \textcolor{comment}{\ *\ (NULLNE\ =\ 1)\ operators.\ */}}
+\DoxyCodeLine{01489\ \textcolor{comment}{/*\ The\ x\ and\ y\ parameter\ swap\ in\ strcmp()\ is\ needed\ to\ handle\ >,\ >=,\ <,\ <=}}
+\DoxyCodeLine{01490\ \textcolor{comment}{\ *\ operators.\ */}}
+\DoxyCodeLine{01491\ \textcolor{comment}{/*\ If\ the\ x\ or\ y\ parameter\ is\ NULL\ its\ value\ will\ be\ printed\ without\ quotes.\ */}}
+\DoxyCodeLine{01492\ \textcolor{preprocessor}{\#define\ \_ck\_assert\_str(X,\ OP,\ Y,\ NULLEQ,\ NULLNE)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01493\ \textcolor{preprocessor}{\ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01494\ \textcolor{preprocessor}{\ \ \ \ const\ char\ *\_ck\_x\ =\ (X);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01495\ \textcolor{preprocessor}{\ \ \ \ const\ char\ *\_ck\_y\ =\ (Y);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01496\ \textcolor{preprocessor}{\ \ \ \ const\ char\ *\_ck\_x\_s;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01497\ \textcolor{preprocessor}{\ \ \ \ const\ char\ *\_ck\_y\_s;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01498\ \textcolor{preprocessor}{\ \ \ \ const\ char\ *\_ck\_x\_q;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01499\ \textcolor{preprocessor}{\ \ \ \ const\ char\ *\_ck\_y\_q;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01500\ \textcolor{preprocessor}{\ \ \ \ if\ (\_ck\_x\ !=\ NULL)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01501\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_x\_q\ =\ "{}\(\backslash\)"{}"{};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01502\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_x\_s\ =\ \_ck\_x;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01503\ \textcolor{preprocessor}{\ \ \ \ \}\ else\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01504\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_x\_q\ =\ "{}"{};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01505\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_x\_s\ =\ "{}(null)"{};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01506\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01507\ \textcolor{preprocessor}{\ \ \ \ if\ (\_ck\_y\ !=\ NULL)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01508\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_y\_q\ =\ "{}\(\backslash\)"{}"{};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01509\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_y\_s\ =\ \_ck\_y;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01510\ \textcolor{preprocessor}{\ \ \ \ \}\ else\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01511\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_y\_q\ =\ "{}"{};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01512\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_y\_s\ =\ "{}(null)"{};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01513\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01514\ \textcolor{preprocessor}{\ \ \ \ ck\_assert\_msg((NULLEQ\ \&\&\ (\_ck\_x\ ==\ NULL)\ \&\&\ (\_ck\_y\ ==\ NULL))\ ||\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01515\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (NULLNE\ \&\&\ ((\_ck\_x\ ==\ NULL)\ ||\ (\_ck\_y\ ==\ NULL))\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{01516\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\_ck\_x\ !=\ \_ck\_y))\ ||\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01517\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((\_ck\_x\ !=\ NULL)\ \&\&\ (\_ck\_y\ !=\ NULL)\ \&\&\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01518\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (0\ OP\ strcmp(\_ck\_y,\ \_ck\_x))),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01519\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Assertion\ '\%s'\ failed:\ \%s\ ==\ \%s\%s\%s,\ \%s\ ==\ \%s\%s\%s"{},\ \ \ \(\backslash\)}}
+\DoxyCodeLine{01520\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#X\ "{}\ "{}\ \#OP\ "{}\ "{}\ \#Y,\ \#X,\ \_ck\_x\_q,\ \_ck\_x\_s,\ \_ck\_x\_q,\ \#Y,\ \ \(\backslash\)}}
+\DoxyCodeLine{01521\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_ck\_y\_q,\ \_ck\_y\_s,\ \_ck\_y\_q);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01522\ \textcolor{preprocessor}{\ \ \}\ while\ (0)}}
+\DoxyCodeLine{01523\ }
+\DoxyCodeLine{01537\ \textcolor{preprocessor}{\#define\ ck\_assert\_str\_eq(X,\ Y)\ \_ck\_assert\_str(X,\ ==,\ Y,\ 0,\ 0)}}
+\DoxyCodeLine{01538\ }
+\DoxyCodeLine{01552\ \textcolor{preprocessor}{\#define\ ck\_assert\_str\_ne(X,\ Y)\ \_ck\_assert\_str(X,\ !=,\ Y,\ 0,\ 0)}}
+\DoxyCodeLine{01553\ }
+\DoxyCodeLine{01567\ \textcolor{preprocessor}{\#define\ ck\_assert\_str\_lt(X,\ Y)\ \_ck\_assert\_str(X,\ <,\ Y,\ 0,\ 0)}}
+\DoxyCodeLine{01568\ }
+\DoxyCodeLine{01582\ \textcolor{preprocessor}{\#define\ ck\_assert\_str\_le(X,\ Y)\ \_ck\_assert\_str(X,\ <=,\ Y,\ 0,\ 0)}}
+\DoxyCodeLine{01583\ }
+\DoxyCodeLine{01597\ \textcolor{preprocessor}{\#define\ ck\_assert\_str\_gt(X,\ Y)\ \_ck\_assert\_str(X,\ >,\ Y,\ 0,\ 0)}}
+\DoxyCodeLine{01598\ }
+\DoxyCodeLine{01612\ \textcolor{preprocessor}{\#define\ ck\_assert\_str\_ge(X,\ Y)\ \_ck\_assert\_str(X,\ >=,\ Y,\ 0,\ 0)}}
+\DoxyCodeLine{01613\ }
+\DoxyCodeLine{01628\ \textcolor{preprocessor}{\#define\ ck\_assert\_pstr\_eq(X,\ Y)\ \_ck\_assert\_str(X,\ ==,\ Y,\ 1,\ 0)}}
+\DoxyCodeLine{01629\ }
+\DoxyCodeLine{01644\ \textcolor{preprocessor}{\#define\ ck\_assert\_pstr\_ne(X,\ Y)\ \_ck\_assert\_str(X,\ !=,\ Y,\ 0,\ 1)}}
+\DoxyCodeLine{01645\ }
+\DoxyCodeLine{01646\ \textcolor{comment}{/*\ Memory\ location\ comparison\ macros\ with\ improved\ output\ compared\ to}}
+\DoxyCodeLine{01647\ \textcolor{comment}{\ *\ ck\_assert()\ */}}
+\DoxyCodeLine{01648\ \textcolor{comment}{/*\ OP\ might\ be\ any\ operator\ that\ can\ be\ used\ in\ '0\ OP\ memcmp(X,Y,L)'\ comparison}}
+\DoxyCodeLine{01649\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01650\ \textcolor{comment}{/*\ The\ x\ and\ y\ parameter\ swap\ in\ memcmp()\ is\ needed\ to\ handle\ >,\ >=,\ <,\ <=}}
+\DoxyCodeLine{01651\ \textcolor{comment}{\ *\ operators\ */}}
+\DoxyCodeLine{01652\ \textcolor{comment}{/*\ Output\ is\ limited\ to\ CK\_MAX\_ASSERT\_MEM\_PRINT\_SIZE\ bytes\ */}}
+\DoxyCodeLine{01653\ \textcolor{preprocessor}{\#ifndef\ CK\_MAX\_ASSERT\_MEM\_PRINT\_SIZE}}
+\DoxyCodeLine{01654\ \textcolor{preprocessor}{\#define\ CK\_MAX\_ASSERT\_MEM\_PRINT\_SIZE\ 64}}
+\DoxyCodeLine{01655\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01656\ }
+\DoxyCodeLine{01657\ \textcolor{comment}{/*\ Memory\ location\ comparison\ macros\ with\ improved\ output\ compared\ to}}
+\DoxyCodeLine{01658\ \textcolor{comment}{\ *\ ck\_assert()\ */}}
+\DoxyCodeLine{01659\ \textcolor{comment}{/*\ OP\ might\ be\ any\ operator\ that\ can\ be\ used\ in\ '0\ OP\ memcmp(X,Y,L)'\ comparison}}
+\DoxyCodeLine{01660\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01661\ \textcolor{comment}{/*\ The\ x\ and\ y\ parameter\ swap\ in\ memcmp()\ is\ needed\ to\ handle\ >,\ >=,\ <,\ <=}}
+\DoxyCodeLine{01662\ \textcolor{comment}{\ *\ operators\ */}}
+\DoxyCodeLine{01663\ \textcolor{comment}{/*\ Output\ is\ limited\ to\ CK\_MAX\_ASSERT\_MEM\_PRINT\_SIZE\ bytes\ */}}
+\DoxyCodeLine{01664\ \textcolor{preprocessor}{\#ifndef\ CK\_MAX\_ASSERT\_MEM\_PRINT\_SIZE}}
+\DoxyCodeLine{01665\ \textcolor{preprocessor}{\#define\ CK\_MAX\_ASSERT\_MEM\_PRINT\_SIZE\ 64}}
+\DoxyCodeLine{01666\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01667\ }
+\DoxyCodeLine{01668\ \textcolor{preprocessor}{\#define\ \_ck\_assert\_mem(X,\ OP,\ Y,\ L)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01669\ \textcolor{preprocessor}{\ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01670\ \textcolor{preprocessor}{\ \ \ \ const\ uint8\_t\ *\_ck\_x\ =\ (const\ uint8\_t\ *)(X);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01671\ \textcolor{preprocessor}{\ \ \ \ const\ uint8\_t\ *\_ck\_y\ =\ (const\ uint8\_t\ *)(Y);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01672\ \textcolor{preprocessor}{\ \ \ \ size\_t\ \_ck\_l\ =\ (L);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01673\ \textcolor{preprocessor}{\ \ \ \ char\ \_ck\_x\_str[CK\_MAX\_ASSERT\_MEM\_PRINT\_SIZE\ *\ 2\ +\ 1];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01674\ \textcolor{preprocessor}{\ \ \ \ char\ \_ck\_y\_str[CK\_MAX\_ASSERT\_MEM\_PRINT\_SIZE\ *\ 2\ +\ 1];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01675\ \textcolor{preprocessor}{\ \ \ \ static\ const\ char\ \_ck\_hexdigits[]\ =\ "{}0123456789abcdef"{};\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01676\ \textcolor{preprocessor}{\ \ \ \ size\_t\ \_ck\_i;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01677\ \textcolor{preprocessor}{\ \ \ \ size\_t\ \_ck\_maxl\ =\ (\_ck\_l\ >\ CK\_MAX\_ASSERT\_MEM\_PRINT\_SIZE)\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01678\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ?\ CK\_MAX\_ASSERT\_MEM\_PRINT\_SIZE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01679\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \_ck\_l;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01680\ \textcolor{preprocessor}{\ \ \ \ for\ (\_ck\_i\ =\ 0;\ \_ck\_i\ <\ \_ck\_maxl;\ \_ck\_i++)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01681\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_x\_str[\_ck\_i\ *\ 2]\ =\ \_ck\_hexdigits[(\_ck\_x[\_ck\_i]\ >>\ 4)\ \&\ 0xF];\ \(\backslash\)}}
+\DoxyCodeLine{01682\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_y\_str[\_ck\_i\ *\ 2]\ =\ \_ck\_hexdigits[(\_ck\_y[\_ck\_i]\ >>\ 4)\ \&\ 0xF];\ \(\backslash\)}}
+\DoxyCodeLine{01683\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_x\_str[\_ck\_i\ *\ 2\ +\ 1]\ =\ \_ck\_hexdigits[\_ck\_x[\_ck\_i]\ \&\ 0xF];\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01684\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_y\_str[\_ck\_i\ *\ 2\ +\ 1]\ =\ \_ck\_hexdigits[\_ck\_y[\_ck\_i]\ \&\ 0xF];\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01685\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01686\ \textcolor{preprocessor}{\ \ \ \ \_ck\_x\_str[\_ck\_i\ *\ 2]\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01687\ \textcolor{preprocessor}{\ \ \ \ \_ck\_y\_str[\_ck\_i\ *\ 2]\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01688\ \textcolor{preprocessor}{\ \ \ \ if\ (\_ck\_maxl\ !=\ \_ck\_l)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01689\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_x\_str[\_ck\_i\ *\ 2\ -\/\ 2]\ =\ '.';\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01690\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_y\_str[\_ck\_i\ *\ 2\ -\/\ 2]\ =\ '.';\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01691\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_x\_str[\_ck\_i\ *\ 2\ -\/\ 1]\ =\ '.';\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01692\ \textcolor{preprocessor}{\ \ \ \ \ \ \_ck\_y\_str[\_ck\_i\ *\ 2\ -\/\ 1]\ =\ '.';\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01693\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01694\ \textcolor{preprocessor}{\ \ \ \ ck\_assert\_msg(0\ OP\ memcmp(\_ck\_y,\ \_ck\_x,\ \_ck\_l),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01695\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Assertion\ '\%s'\ failed:\ \%s\ ==\ \(\backslash\)"{}\%s\(\backslash\)"{},\ \%s\ ==\ \(\backslash\)"{}\%s\(\backslash\)"{}"{},\ \(\backslash\)}}
+\DoxyCodeLine{01696\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#X\ "{}\ "{}\ \#OP\ "{}\ "{}\ \#Y,\ \#X,\ \_ck\_x\_str,\ \#Y,\ \_ck\_y\_str);\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01697\ \textcolor{preprocessor}{\ \ \}\ while\ (0)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01710\ \textcolor{preprocessor}{\#define\ ck\_assert\_mem\_eq(X,\ Y,\ L)\ \_ck\_assert\_mem(X,\ ==,\ Y,\ L)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01723\ \textcolor{preprocessor}{\#define\ ck\_assert\_mem\_ne(X,\ Y,\ L)\ \_ck\_assert\_mem(X,\ !=,\ Y,\ L)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01737\ \textcolor{preprocessor}{\#define\ ck\_assert\_mem\_lt(X,\ Y,\ L)\ \_ck\_assert\_mem(X,\ <,\ Y,\ L)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01751\ \textcolor{preprocessor}{\#define\ ck\_assert\_mem\_le(X,\ Y,\ L)\ \_ck\_assert\_mem(X,\ <=,\ Y,\ L)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01765\ \textcolor{preprocessor}{\#define\ ck\_assert\_mem\_gt(X,\ Y,\ L)\ \_ck\_assert\_mem(X,\ >,\ Y,\ L)}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01779\ \textcolor{preprocessor}{\#define\ ck\_assert\_mem\_ge(X,\ Y,\ L)\ \_ck\_assert\_mem(X,\ >=,\ Y,\ L)}}
+\DoxyCodeLine{01780\ }
+\DoxyCodeLine{01781\ \textcolor{comment}{/*\ Pointer\ comparison\ macros\ with\ improved\ output\ compared\ to\ ck\_assert().\ */}}
+\DoxyCodeLine{01782\ \textcolor{comment}{/*\ OP\ may\ only\ be\ ==\ or\ !=\ \ */}}
+\DoxyCodeLine{01783\ \textcolor{preprocessor}{\#define\ \_ck\_assert\_ptr(X,\ OP,\ Y)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01784\ \textcolor{preprocessor}{\ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01785\ \textcolor{preprocessor}{\ \ \ \ const\ void\ *\_ck\_x\ =\ (X);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01786\ \textcolor{preprocessor}{\ \ \ \ const\ void\ *\_ck\_y\ =\ (Y);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01787\ \textcolor{preprocessor}{\ \ \ \ ck\_assert\_msg(\_ck\_x\ OP\ \_ck\_y,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01788\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Assertion\ '\%s'\ failed:\ \%s\ ==\ \%\#lx,\ \%s\ ==\ \%\#lx"{},\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01789\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#X\ "{}\ "{}\ \#OP\ "{}\ "{}\ \#Y,\ \#X,\ (unsigned\ long)(uintptr\_t)\_ck\_x,\ \#Y,\ \(\backslash\)}}
+\DoxyCodeLine{01790\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (unsigned\ long)(uintptr\_t)\_ck\_y);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01791\ \textcolor{preprocessor}{\ \ \}\ while\ (0)}}
+\DoxyCodeLine{01792\ }
+\DoxyCodeLine{01793\ \textcolor{comment}{/*\ Pointer\ against\ NULL\ comparison\ macros\ with\ improved\ output}}
+\DoxyCodeLine{01794\ \textcolor{comment}{\ *\ compared\ to\ ck\_assert().\ */}}
+\DoxyCodeLine{01795\ \textcolor{comment}{/*\ OP\ may\ only\ be\ ==\ or\ !=\ \ */}}
+\DoxyCodeLine{01796\ \textcolor{preprocessor}{\#define\ \_ck\_assert\_ptr\_null(X,\ OP)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01797\ \textcolor{preprocessor}{\ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01798\ \textcolor{preprocessor}{\ \ \ \ const\ void\ *\_ck\_x\ =\ (X);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01799\ \textcolor{preprocessor}{\ \ \ \ ck\_assert\_msg(\_ck\_x\ OP\ NULL,\ "{}Assertion\ '\%s'\ failed:\ \%s\ ==\ \%\#lx"{},\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01800\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#X\ "{}\ "{}\ \#OP\ "{}\ NULL"{},\ \#X,\ (unsigned\ long)(uintptr\_t)\_ck\_x);\ \(\backslash\)}}
+\DoxyCodeLine{01801\ \textcolor{preprocessor}{\ \ \}\ while\ (0)}}
+\DoxyCodeLine{01802\ }
+\DoxyCodeLine{01816\ \textcolor{preprocessor}{\#define\ ck\_assert\_ptr\_eq(X,\ Y)\ \_ck\_assert\_ptr(X,\ ==,\ Y)}}
+\DoxyCodeLine{01817\ }
+\DoxyCodeLine{01828\ \textcolor{preprocessor}{\#define\ ck\_assert\_ptr\_ne(X,\ Y)\ \_ck\_assert\_ptr(X,\ !=,\ Y)}}
+\DoxyCodeLine{01829\ }
+\DoxyCodeLine{01841\ \textcolor{preprocessor}{\#define\ ck\_assert\_ptr\_null(X)\ \_ck\_assert\_ptr\_null(X,\ ==)}}
+\DoxyCodeLine{01842\ }
+\DoxyCodeLine{01854\ \textcolor{preprocessor}{\#define\ ck\_assert\_ptr\_nonnull(X)\ \_ck\_assert\_ptr\_null(X,\ !=)}}
+\DoxyCodeLine{01855\ }
+\DoxyCodeLine{01866\ \textcolor{preprocessor}{\#define\ mark\_point()\ \_mark\_point(\_\_FILE\_\_,\ \_\_LINE\_\_)}}
+\DoxyCodeLine{01867\ }
+\DoxyCodeLine{01868\ \textcolor{comment}{/*\ Non\ macro\ version\ of\ \#mark\_point\ */}}
+\DoxyCodeLine{01869\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ \_mark\_point(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keywordtype}{int}\ line);}
+\DoxyCodeLine{01870\ }
+\DoxyCodeLine{01874\ \textcolor{keyword}{enum}\ test\_result\ \{}
+\DoxyCodeLine{01875\ \ \ CK\_TEST\_RESULT\_INVALID,\ }
+\DoxyCodeLine{01876\ \ \ CK\_PASS,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01877\ \ \ CK\_FAILURE,\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01878\ \ \ CK\_ERROR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01880\ \};}
+\DoxyCodeLine{01881\ }
+\DoxyCodeLine{01885\ \textcolor{keyword}{enum}\ print\_output\ \{}
+\DoxyCodeLine{01886\ \ \ CK\_SILENT,\ \ }
+\DoxyCodeLine{01887\ \ \ CK\_MINIMAL,\ }
+\DoxyCodeLine{01888\ \ \ CK\_NORMAL,\ \ }
+\DoxyCodeLine{01889\ \ \ CK\_VERBOSE,\ }
+\DoxyCodeLine{01890\ \ \ CK\_ENV,\ \ \ \ \ }
+\DoxyCodeLine{01895\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{01896\ \ \ \ \ CK\_SUBUNIT,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01897\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01898\ \ \ CK\_LAST\ }
+\DoxyCodeLine{01899\ \};}
+\DoxyCodeLine{01900\ }
+\DoxyCodeLine{01904\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SRunner\ SRunner;}
+\DoxyCodeLine{01905\ }
+\DoxyCodeLine{01909\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }TestResult\ TestResult;}
+\DoxyCodeLine{01910\ }
+\DoxyCodeLine{01914\ \textcolor{keyword}{enum}\ ck\_result\_ctx\ \{}
+\DoxyCodeLine{01915\ \ \ CK\_CTX\_INVALID,\ }
+\DoxyCodeLine{01916\ \ \ CK\_CTX\_SETUP,\ \ \ }
+\DoxyCodeLine{01917\ \ \ CK\_CTX\_TEST,\ \ \ \ }
+\DoxyCodeLine{01918\ \ \ CK\_CTX\_TEARDOWN\ }
+\DoxyCodeLine{01919\ \};}
+\DoxyCodeLine{01920\ }
+\DoxyCodeLine{01933\ CK\_DLL\_EXP\ \textcolor{keywordtype}{int}\ CK\_EXPORT\ tr\_rtype(TestResult\ *tr);}
+\DoxyCodeLine{01934\ }
+\DoxyCodeLine{01947\ CK\_DLL\_EXP\ \textcolor{keyword}{enum}\ ck\_result\_ctx\ CK\_EXPORT\ tr\_ctx(TestResult\ *tr);}
+\DoxyCodeLine{01948\ }
+\DoxyCodeLine{01956\ CK\_DLL\_EXP\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *CK\_EXPORT\ tr\_msg(TestResult\ *tr);}
+\DoxyCodeLine{01957\ }
+\DoxyCodeLine{01966\ CK\_DLL\_EXP\ \textcolor{keywordtype}{int}\ CK\_EXPORT\ tr\_lno(TestResult\ *tr);}
+\DoxyCodeLine{01967\ }
+\DoxyCodeLine{01977\ CK\_DLL\_EXP\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *CK\_EXPORT\ tr\_lfile(TestResult\ *tr);}
+\DoxyCodeLine{01978\ }
+\DoxyCodeLine{01988\ CK\_DLL\_EXP\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *CK\_EXPORT\ tr\_tcname(TestResult\ *tr);}
+\DoxyCodeLine{01989\ }
+\DoxyCodeLine{02004\ CK\_DLL\_EXP\ SRunner\ *CK\_EXPORT\ srunner\_create(Suite\ *s);}
+\DoxyCodeLine{02005\ }
+\DoxyCodeLine{02017\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ srunner\_add\_suite(SRunner\ *sr,\ Suite\ *s);}
+\DoxyCodeLine{02018\ }
+\DoxyCodeLine{02030\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ srunner\_free(SRunner\ *sr);}
+\DoxyCodeLine{02031\ }
+\DoxyCodeLine{02048\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ srunner\_run\_all(SRunner\ *sr,}
+\DoxyCodeLine{02049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ print\_output\ print\_mode);}
+\DoxyCodeLine{02050\ }
+\DoxyCodeLine{02079\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ srunner\_run(SRunner\ *sr,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *sname,}
+\DoxyCodeLine{02080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *tcname,}
+\DoxyCodeLine{02081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ print\_output\ print\_mode);}
+\DoxyCodeLine{02082\ }
+\DoxyCodeLine{02117\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ srunner\_run\_tagged(SRunner\ *sr,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *sname,}
+\DoxyCodeLine{02118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *tcname,}
+\DoxyCodeLine{02119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *include\_tags,}
+\DoxyCodeLine{02120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *exclude\_tags,}
+\DoxyCodeLine{02121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ print\_output\ print\_mode);}
+\DoxyCodeLine{02122\ }
+\DoxyCodeLine{02134\ CK\_DLL\_EXP\ \textcolor{keywordtype}{int}\ CK\_EXPORT\ srunner\_ntests\_failed(SRunner\ *sr);}
+\DoxyCodeLine{02135\ }
+\DoxyCodeLine{02145\ CK\_DLL\_EXP\ \textcolor{keywordtype}{int}\ CK\_EXPORT\ srunner\_ntests\_run(SRunner\ *sr);}
+\DoxyCodeLine{02146\ }
+\DoxyCodeLine{02164\ CK\_DLL\_EXP\ TestResult\ **CK\_EXPORT\ srunner\_failures(SRunner\ *sr);}
+\DoxyCodeLine{02165\ }
+\DoxyCodeLine{02184\ CK\_DLL\_EXP\ TestResult\ **CK\_EXPORT\ srunner\_results(SRunner\ *sr);}
+\DoxyCodeLine{02185\ }
+\DoxyCodeLine{02195\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ srunner\_print(SRunner\ *sr,}
+\DoxyCodeLine{02196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ print\_output\ print\_mode);}
+\DoxyCodeLine{02197\ }
+\DoxyCodeLine{02214\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ srunner\_set\_log(SRunner\ *sr,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *fname);}
+\DoxyCodeLine{02215\ }
+\DoxyCodeLine{02226\ CK\_DLL\_EXP\ \textcolor{keywordtype}{int}\ CK\_EXPORT\ srunner\_has\_log(SRunner\ *sr);}
+\DoxyCodeLine{02227\ }
+\DoxyCodeLine{02236\ CK\_DLL\_EXP\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *CK\_EXPORT\ srunner\_log\_fname(SRunner\ *sr);}
+\DoxyCodeLine{02237\ }
+\DoxyCodeLine{02254\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ srunner\_set\_xml(SRunner\ *sr,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *fname);}
+\DoxyCodeLine{02255\ }
+\DoxyCodeLine{02266\ CK\_DLL\_EXP\ \textcolor{keywordtype}{int}\ CK\_EXPORT\ srunner\_has\_xml(SRunner\ *sr);}
+\DoxyCodeLine{02267\ }
+\DoxyCodeLine{02276\ CK\_DLL\_EXP\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *CK\_EXPORT\ srunner\_xml\_fname(SRunner\ *sr);}
+\DoxyCodeLine{02277\ }
+\DoxyCodeLine{02294\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ srunner\_set\_tap(SRunner\ *sr,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *fname);}
+\DoxyCodeLine{02295\ }
+\DoxyCodeLine{02306\ CK\_DLL\_EXP\ \textcolor{keywordtype}{int}\ CK\_EXPORT\ srunner\_has\_tap(SRunner\ *sr);}
+\DoxyCodeLine{02307\ }
+\DoxyCodeLine{02316\ CK\_DLL\_EXP\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *CK\_EXPORT\ srunner\_tap\_fname(SRunner\ *sr);}
+\DoxyCodeLine{02317\ }
+\DoxyCodeLine{02321\ \textcolor{keyword}{enum}\ fork\_status\ \{}
+\DoxyCodeLine{02322\ \ \ CK\_FORK\_GETENV,\ }
+\DoxyCodeLine{02323\ \ \ CK\_FORK,\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02324\ \ \ CK\_NOFORK\ \ \ \ \ \ \ }
+\DoxyCodeLine{02325\ \};}
+\DoxyCodeLine{02326\ }
+\DoxyCodeLine{02334\ CK\_DLL\_EXP\ \textcolor{keyword}{enum}\ fork\_status\ CK\_EXPORT\ srunner\_fork\_status(SRunner\ *sr);}
+\DoxyCodeLine{02335\ }
+\DoxyCodeLine{02356\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ srunner\_set\_fork\_status(SRunner\ *sr,}
+\DoxyCodeLine{02357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ fork\_status\ fstat);}
+\DoxyCodeLine{02358\ }
+\DoxyCodeLine{02379\ CK\_DLL\_EXP\ pid\_t\ CK\_EXPORT\ check\_fork(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{02380\ }
+\DoxyCodeLine{02396\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ check\_waitpid\_and\_exit(pid\_t\ pid)}
+\DoxyCodeLine{02397\ \ \ \ \ CK\_ATTRIBUTE\_NORETURN;}
+\DoxyCodeLine{02398\ }
+\DoxyCodeLine{02415\ CK\_DLL\_EXP\ \textcolor{keywordtype}{void}\ CK\_EXPORT\ check\_set\_max\_msg\_size(\textcolor{keywordtype}{size\_t}\ max\_msg\_size);}
+\DoxyCodeLine{02416\ }
+\DoxyCodeLine{02417\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{02418\ CK\_CPPEND}
+\DoxyCodeLine{02419\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02420\ }
+\DoxyCodeLine{02421\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ CHECK\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

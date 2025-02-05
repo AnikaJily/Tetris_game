@@ -1,0 +1,22 @@
+\doxysection{frontend.\+h}
+\hypertarget{frontend_8h_source}{}\label{frontend_8h_source}\index{inc/frontend.h@{inc/frontend.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ FRONTEND\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ FRONTEND\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <ncurses.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}../tetris.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Прототип\ функции\ DrawBoards}}
+\DoxyCodeLine{00009\ \textcolor{keywordtype}{void}\ CreateBoards(\textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ x,\ \mbox{\hyperlink{struct_win_blocks}{WinBlocks}}\ *winGame);}
+\DoxyCodeLine{00010\ \textcolor{keywordtype}{void}\ SetUp(\mbox{\hyperlink{struct_win_blocks}{WinBlocks}}\ *winGame);}
+\DoxyCodeLine{00011\ \textcolor{keywordtype}{void}\ draw\_board(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ gameInfo,\ \mbox{\hyperlink{struct_win_blocks}{WinBlocks}}\ winGame);}
+\DoxyCodeLine{00012\ \textcolor{keywordtype}{void}\ draw\_game(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ gameInfo,\ \mbox{\hyperlink{struct_win_blocks}{WinBlocks}}\ winGame);}
+\DoxyCodeLine{00013\ \textcolor{keywordtype}{void}\ draw\_next(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ gameInfo,\ \mbox{\hyperlink{struct_win_blocks}{WinBlocks}}\ winGame);}
+\DoxyCodeLine{00014\ \textcolor{keywordtype}{void}\ game\_over(WINDOW\ *win);}
+\DoxyCodeLine{00015\ \textcolor{keywordtype}{void}\ draw\_info(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ gameInfo,\ \mbox{\hyperlink{struct_win_blocks}{WinBlocks}}\ winGame);}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

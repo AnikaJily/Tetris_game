@@ -1,0 +1,44 @@
+\doxysection{backend.\+h}
+\hypertarget{backend_8h_source}{}\label{backend_8h_source}\index{inc/backend.h@{inc/backend.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ BACKEND\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ BACKEND\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <ncurses.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}../tetris.h"{}}}
+\DoxyCodeLine{00007\ \mbox{\hyperlink{struct_figure}{Figure}}\ baseFigure();}
+\DoxyCodeLine{00008\ \textcolor{keywordtype}{int}\ **create\_field(\textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{00009\ \textcolor{keywordtype}{void}\ Constructor(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00010\ \textcolor{keywordtype}{void}\ Destructor(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00011\ \textcolor{keywordtype}{int}\ isRotatable(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00012\ \textcolor{keywordtype}{void}\ printCurFigureInfo(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00013\ \textcolor{keywordtype}{void}\ delete\_field(\textcolor{keywordtype}{int}\ **matrix);}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keywordtype}{void}\ createNextFigure(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00016\ \textcolor{keywordtype}{void}\ createFigure(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00017\ \textcolor{keywordtype}{void}\ FigureOnBoard(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00018\ \textcolor{keywordtype}{void}\ FigureOnNext(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00019\ \textcolor{keywordtype}{int}\ Move(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo,\ \textcolor{keywordtype}{int}\ dx,\ \textcolor{keywordtype}{int}\ dy);}
+\DoxyCodeLine{00020\ \textcolor{keywordtype}{void}\ MoveFigure(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keywordtype}{void}\ clear\_field(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00023\ \textcolor{keywordtype}{void}\ clear\_next(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keywordtype}{int}\ MoveLeft(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00026\ \textcolor{keywordtype}{int}\ MoveRight(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00027\ \textcolor{keywordtype}{int}\ MoveDown(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00028\ \textcolor{keywordtype}{int}\ Rotate(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00029\ \textcolor{keywordtype}{void}\ Drop(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keywordtype}{int}\ killLines(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00032\ \textcolor{keywordtype}{int}\ isEnd(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00033\ \textcolor{keywordtype}{void}\ FixOnBoard(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00034\ \textcolor{keywordtype}{int}\ IsUp(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo);}
+\DoxyCodeLine{00035\ \textcolor{keywordtype}{int}\ load\_record(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *filename);}
+\DoxyCodeLine{00036\ \textcolor{keywordtype}{void}\ save\_record(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *filename,\ \textcolor{keywordtype}{int}\ newRecord);}
+\DoxyCodeLine{00037\ \textcolor{keywordtype}{void}\ update\_record(\mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}}\ *gameInfo,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *filename);}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

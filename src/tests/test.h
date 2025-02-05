@@ -2,8 +2,8 @@
 #define TEST_H
 
 #include "../tetris.h"
-#include "../backend.h"
-#include "../frontend.h"
+#include "../inc//backend.h"
+#include "../inc/frontend.h"
 
 #include "check.h"
 

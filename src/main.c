@@ -1,8 +1,8 @@
 #include <sys/time.h>
 #include <time.h>
 
-#include "backend.h"
-#include "frontend.h"
+#include "inc/backend.h"
+#include "inc/frontend.h"
 #include "tetris.h"
 
 typedef enum {

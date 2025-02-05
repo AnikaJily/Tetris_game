@@ -1,0 +1,17 @@
+var NAVTREEINDEX0 =
+{
+"annotated.html":[0,0],
+"backend_8h_source.html":[1,0,0,0],
+"classes.html":[0,1],
+"dir_59425e443f801f1f2fd8bbe4959a3ccf.html":[1,0,1],
+"dir_bfccd401955b95cf8c75461437045ac0.html":[1,0,0],
+"files.html":[1,0],
+"frontend_8h_source.html":[1,0,0,1],
+"index.html":[],
+"pages.html":[],
+"struct_figure.html":[0,0,0],
+"struct_game_info__t.html":[0,0,1],
+"struct_win_blocks.html":[0,0,2],
+"test_8h_source.html":[1,0,1,0],
+"tetris_8h_source.html":[1,0,2]
+};

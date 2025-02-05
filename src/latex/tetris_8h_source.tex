@@ -1,0 +1,72 @@
+\doxysection{tetris.\+h}
+\hypertarget{tetris_8h_source}{}\label{tetris_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ TETRIS\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ TETRIS\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <ncurses.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <stdlib.h>}\ \ \textcolor{comment}{//\ Для\ rand()\ и\ srand()}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <time.h>}\ \ \ \ \textcolor{comment}{//\ Для\ time()}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ TIME\_FOR\_SHIFT\ 0.3}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ RATIO\ 2}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ MATRIX\_HEIGHT\ 20}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ MATRIX\_WIDTH\ 10}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ MATRIX\_NEXT\_HEIGHT\ 6}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ MATRIX\_NEXT\_WIDTH\ 6}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ game\ board}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ BOARD\_HEIGHT\ (MATRIX\_HEIGHT\ +\ 2)}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ BOARD\_WIDTH\ (MATRIX\_WIDTH\ *\ 2\ +\ 2)}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ next\ board}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ NEXT\_WIDTH\ MATRIX\_NEXT\_WIDTH\ *RATIO\ +\ 2}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ NEXT\_HEIGHT\ MATRIX\_NEXT\_HEIGHT\ +\ 2}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ info\ board}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ INFO\_WIDTH\ 7\ *\ RATIO}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ INFO\_HEIGHT\ 14}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ rules\ board}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ RULES\_WIDTH\ 17\ *\ RATIO\ +\ 1}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ RULES\_HEIGHT\ 5}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ FIGURE\_SIZE\ 4}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ COLOR\_ORANGE\ 8}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_figure}{Figure}}\ \{}
+\DoxyCodeLine{00040\ \ \ \textcolor{keywordtype}{int}\ id;}
+\DoxyCodeLine{00041\ \ \ \textcolor{keywordtype}{int}\ x[FIGURE\_SIZE];}
+\DoxyCodeLine{00042\ \ \ \textcolor{keywordtype}{int}\ y[FIGURE\_SIZE];}
+\DoxyCodeLine{00043\ \ \ \textcolor{keywordtype}{int}\ center\_x;}
+\DoxyCodeLine{00044\ \ \ \textcolor{keywordtype}{int}\ center\_y;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \}\ \mbox{\hyperlink{struct_figure}{Figure}};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00049\ \ \ \textcolor{keywordtype}{int}\ **field;}
+\DoxyCodeLine{00050\ \ \ \textcolor{keywordtype}{int}\ **next;}
+\DoxyCodeLine{00051\ \ \ \textcolor{keywordtype}{int}\ score;}
+\DoxyCodeLine{00052\ \ \ \textcolor{keywordtype}{int}\ record;}
+\DoxyCodeLine{00053\ \ \ \textcolor{keywordtype}{int}\ level;}
+\DoxyCodeLine{00054\ \ \ \textcolor{keywordtype}{int}\ speed;}
+\DoxyCodeLine{00055\ \ \ \textcolor{keywordtype}{int}\ pause;}
+\DoxyCodeLine{00056\ \ \ \mbox{\hyperlink{struct_figure}{Figure}}\ cur\_figure;}
+\DoxyCodeLine{00057\ \ \ \mbox{\hyperlink{struct_figure}{Figure}}\ next\_figure;}
+\DoxyCodeLine{00058\ \}\ \mbox{\hyperlink{struct_game_info__t}{GameInfo\_t}};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_win_blocks}{WinBlocks}}\ \{}
+\DoxyCodeLine{00061\ \ \ WINDOW\ *winBoard;}
+\DoxyCodeLine{00062\ \ \ WINDOW\ *winNext;}
+\DoxyCodeLine{00063\ \ \ WINDOW\ *winInfo;}
+\DoxyCodeLine{00064\ \ \ WINDOW\ *winRules;}
+\DoxyCodeLine{00065\ \}\ \mbox{\hyperlink{struct_win_blocks}{WinBlocks}};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

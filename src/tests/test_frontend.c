@@ -1,17 +1,9 @@
 #include <ncurses.h>  // Добавляем для определения WINDOW
 
-#include "../backend.h"
-#include "../frontend.h"
+#include "../inc//frontend.h"
+#include "../inc/backend.h"
 #include "../tetris.h"
 #include "test.h"
-
-// START_TEST(test_create_field_small) {
-//   int** field = create_field(1, 1);
-//   ck_assert_ptr_nonnull(field);
-//   // ck_assert_ptr_nonnull(field[0]);
-//   // ck_assert_int_eq(field[0][0], 0);
-//   delete_field(field);
-// }
 
 START_TEST(test_create_field_large) {
   int** field = create_field(100, 100);
@@ -52,47 +44,114 @@ START_TEST(test_game_over) {
   delwin(win);
 }
 
-// START_TEST(test_draw_board) {
-//   WinBlocks winGame;
-//   CreateBoards(0, 0, &winGame);
+START_TEST(test_create_boards) {
+  WinBlocks winGame;
+  CreateBoards(0, 0, &winGame);
 
-//   GameInfo_t gameInfo;
-//   gameInfo.field = create_field(MATRIX_HEIGHT, MATRIX_WIDTH);
+  // Проверяем, что окна были созданы
+  ck_assert_ptr_nonnull(winGame.winBoard);
+  ck_assert_ptr_nonnull(winGame.winNext);
+  ck_assert_ptr_nonnull(winGame.winInfo);
+  ck_assert_ptr_nonnull(winGame.winRules);
 
-//   // Заполнение поля тестовыми значениями
-//   for (int i = 0; i < MATRIX_HEIGHT; i++) {
-//     for (int j = 0; j < MATRIX_WIDTH; j++) {
-//       gameInfo.field[i][j] = (i + j) % 8 + 1;  // Примерный цвет
-//     }
-//   }
+  delwin(winGame.winBoard);
+  delwin(winGame.winNext);
+  delwin(winGame.winInfo);
+  delwin(winGame.winRules);
+}
 
-//   draw_board(gameInfo, winGame);
 
-//   // Проверка содержимого окна может потребовать дополнительного подхода
-//   delete_field(gameInfo.field);
-// }
+START_TEST(test_draw_next) {
+  WinBlocks winGame;
+  GameInfo_t gameInfo;
 
-// START_TEST(test_draw_next) {
-//   WinBlocks winGame;
-//   CreateBoards(0, 0, &winGame);
+  // Инициализируем окна и игровую информацию
+  CreateBoards(0, 0, &winGame);
 
-//   GameInfo_t gameInfo;
-//   gameInfo.next = create_field(MATRIX_NEXT_HEIGHT, MATRIX_NEXT_WIDTH);
+  // Здесь мы создаем поле с одним цветным блоком для простоты теста
+  gameInfo.field = (int**)malloc(MATRIX_HEIGHT * sizeof(int*));
+  for (int i = 0; i < MATRIX_HEIGHT; i++) {
+    gameInfo.field[i] = (int*)calloc(MATRIX_WIDTH, sizeof(int));
+  }
+  gameInfo.field[0][0] = 1;  // Устанавливаем один блок с цветом 1 (например)
 
-//   // Заполнение следующего блока тестовыми значениями
-//   for (int i = 0; i < MATRIX_NEXT_HEIGHT; i++) {
-//     for (int j = 0; j < MATRIX_NEXT_WIDTH; j++) {
-//       gameInfo.next[i][j] = (i + j) % 8 + 1;  // Примерный цвет
-//     }
-//   }
+  // Вызываем функцию, которую тестируем
+  draw_next(gameInfo, winGame);
 
-//   ck_assert_ptr_nonnull(gameInfo.next);
+  // Простая проверка - убедиться, что в окно что-то записано
+  // Мы не можем проверить точное содержимое без специальных инструментов для
+  // ncurses но можем проверить, что окно не пустое
+  int ch;
+  int count = 0;
+  for (int y = 0; y < BOARD_HEIGHT; y++) {
+    for (int x = 0; x < BOARD_WIDTH; x++) {
+      ch = mvwinch(winGame.winBoard, y, x);
+      if (ch != ' ') {  // Если символ не пробел, значит что-то нарисовано
+        count++;
+        break;  // достаточно найти один символ, чтобы считать тест успешным
+      }
+    }
+    if (count > 0) break;
+  }
+  ck_assert_int_gt(count, 0);  // Проверяем, что хотя бы один символ был записан
 
-//   draw_next(gameInfo, winGame);
+  // Освобождаем память
+  for (int i = 0; i < MATRIX_HEIGHT; i++) {
+    free(gameInfo.field[i]);
+  }
+  free(gameInfo.field);
 
-//   // Проверка содержимого окна может потребовать дополнительного подхода
-//   delete_field(gameInfo.next);
-// }
+  delwin(winGame.winBoard);
+  delwin(winGame.winNext);
+  delwin(winGame.winInfo);
+  delwin(winGame.winRules);
+}
+
+START_TEST(test_draw_board) {
+  WinBlocks winGame;
+  GameInfo_t gameInfo;
+
+  // Инициализируем окна и игровую информацию
+  CreateBoards(0, 0, &winGame);
+
+  // Здесь мы создаем поле с одним цветным блоком для простоты теста
+  gameInfo.field = (int**)malloc(MATRIX_HEIGHT * sizeof(int*));
+  for (int i = 0; i < MATRIX_HEIGHT; i++) {
+    gameInfo.field[i] = (int*)calloc(MATRIX_WIDTH, sizeof(int));
+  }
+  gameInfo.field[0][0] = 1;  // Устанавливаем один блок с цветом 1 (например)
+
+  // Вызываем функцию, которую тестируем
+  draw_board(gameInfo, winGame);
+
+  // Простая проверка - убедиться, что в окно что-то записано
+  // Мы не можем проверить точное содержимое без специальных инструментов для
+  // ncurses но можем проверить, что окно не пустое
+  int ch;
+  int count = 0;
+  for (int y = 0; y < BOARD_HEIGHT; y++) {
+    for (int x = 0; x < BOARD_WIDTH; x++) {
+      ch = mvwinch(winGame.winBoard, y, x);
+      if (ch != ' ') {  // Если символ не пробел, значит что-то нарисовано
+        count++;
+        break;  // достаточно найти один символ, чтобы считать тест успешным
+      }
+    }
+    if (count > 0) break;
+  }
+  ck_assert_int_gt(count, 0);  // Проверяем, что хотя бы один символ был записан
+
+  // Освобождаем память
+  for (int i = 0; i < MATRIX_HEIGHT; i++) {
+    free(gameInfo.field[i]);
+  }
+  free(gameInfo.field);
+
+  delwin(winGame.winBoard);
+  delwin(winGame.winNext);
+  delwin(winGame.winInfo);
+  delwin(winGame.winRules);
+}
 
 Suite* test_frontend(void) {
   Suite* s;
@@ -106,6 +165,7 @@ Suite* test_frontend(void) {
     tcase_add_test(tc, test_create_field_large);
     tcase_add_test(tc, test_draw_info);
     tcase_add_test(tc, test_game_over);
+    tcase_add_test(tc, test__over);
 
     suite_add_tcase(s, tc);
   }
